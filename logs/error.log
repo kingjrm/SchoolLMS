@@ -1,0 +1,504 @@
+[06-Jan-2026 11:43:29 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(167): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 11:43:45 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'jsmith')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'jsmith')
+#2 C:\xampp\htdocs\School-LMS\login.php(167): Auth->login('jsmith', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 11:43:56 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'astudent')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'astudent')
+#2 C:\xampp\htdocs\School-LMS\login.php(167): Auth->login('astudent', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 11:45:57 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:45:57 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:45:57 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:45:57 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:45:57 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:45:57 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'astudent')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'astudent')
+#2 C:\xampp\htdocs\School-LMS\login.php(269): Auth->login('astudent', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 11:46:01 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:01 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:01 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:01 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:01 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:03 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:03 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:03 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:03 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:03 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:04 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:05 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:06 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:08 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:11 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:11 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:11 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:11 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:11 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:28 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:29 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:37 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:37 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:38 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:38 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:38 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:38 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:38 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:46:39 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:49:40 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:49:40 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:49:40 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:49:40 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:49:40 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:51:26 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:51:26 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:51:26 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:51:26 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:51:26 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:52:49 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:52:49 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:52:49 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:52:49 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:52:49 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:53:32 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:53:32 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:53:32 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:53:32 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:53:32 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:54:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:54:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:54:37 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:54:37 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:54:37 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:55:12 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:55:12 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:55:12 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:55:12 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:55:12 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 11:58:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 11:58:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 11:58:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 11:58:35 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 11:58:35 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:00:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 12:00:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 12:00:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 12:00:04 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 12:00:04 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:00:16 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 12:00:16 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 12:00:16 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 12:00:16 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 12:00:16 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:00:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 12:00:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 12:00:35 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\login.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 12:00:35 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 12:00:35 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:00:52 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 12:00:52 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 12:00:52 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\register.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 12:00:52 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 12:00:52 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:01:34 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 43
+[06-Jan-2026 12:01:34 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 44
+[06-Jan-2026 12:01:34 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\School-LMS\index.php:1) in C:\xampp\htdocs\School-LMS\includes\config.php on line 45
+[06-Jan-2026 12:01:34 UTC] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 21
+[06-Jan-2026 12:01:34 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\School-LMS\includes\Auth.php on line 26
+[06-Jan-2026 12:03:15 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:10:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:10:38 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:10:39 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:11:18 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:12:01 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 554
+[06-Jan-2026 12:14:03 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 529
+[06-Jan-2026 12:14:15 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 529
+[06-Jan-2026 12:14:16 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 529
+[06-Jan-2026 12:17:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 533
+[06-Jan-2026 12:19:22 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 457
+[06-Jan-2026 12:19:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 533
+[06-Jan-2026 12:19:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 457
+[06-Jan-2026 12:19:37 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 533
+[06-Jan-2026 12:22:01 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 533
+[06-Jan-2026 12:23:15 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 533
+[06-Jan-2026 12:24:52 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:26:58 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:43:31 UTC] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:43:31 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\School-LMS\index.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:43:39 UTC] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:43:39 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\School-LMS\index.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:48:06 UTC] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:48:06 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\School-LMS\index.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:48:43 UTC] PHP Warning:  Undefined variable $pdo in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:48:43 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\School-LMS\index.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\School-LMS\index.php on line 9
+[06-Jan-2026 12:49:11 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:50:54 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:11 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:11 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:51:17 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:22 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:22 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:51:35 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:52 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:51:52 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'jsmith')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'jsmith')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('jsmith', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:51:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:54:05 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 458
+[06-Jan-2026 12:57:56 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:09 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:16 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:16 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:22 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:22 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:23 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:24 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:32 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:32 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:32 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:32 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:33 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:33 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:33 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:58:33 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 12:58:36 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:59:41 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:59:47 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 12:59:47 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:01:58 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:23 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:24 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:29 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:29 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:02:31 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:36 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:36 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'password123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:02:40 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:02:41 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 458
+[06-Jan-2026 13:03:02 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('kingjerome@gmai...', 'jinwome')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(96): Database->bind('ss', 'jinwome', 'kingjerome@gmai...')
+#2 C:\xampp\htdocs\School-LMS\register.php(31): Auth->register('jinwome', 'kingjerome@gmai...', 'password123', 'password123', 'King Jerome', 'Lacerna')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:05:00 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:04 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:04 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:05:20 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:37 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:37 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin@schoollms...')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin@schoollms...')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin@schoollms...', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:05:39 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:47 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:05:47 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin@schoollms...')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin@schoollms...')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('admin@schoollms...', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:06:28 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:06:39 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:06:39 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'student')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'student')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('student', 'student123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:06:41 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:07:07 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:07:07 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'student')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'student')
+#2 C:\xampp\htdocs\School-LMS\login.php(547): Auth->login('student', 'adasdasd')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:07:11 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\login.php on line 534
+[06-Jan-2026 13:08:25 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('254', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('s', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:09:19 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('admin', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'admin', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:09:45 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('admin', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'admin', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'asdad')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:10:17 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('admin', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'admin', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:10:48 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('asdadasd', 'asdadasd')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'asdadasd', 'asdadasd')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('asdadasd', 'asdad')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:11:10 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('admin', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'admin', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'adasdadasdasd')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:11:22 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('admin', 'admin')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(38): Database->bind('ss', 'admin', 'admin')
+#2 C:\xampp\htdocs\School-LMS\login.php(29): Auth->login('admin', 'admin123')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 13:15:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 458
+[06-Jan-2026 13:16:19 UTC] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\School-LMS\includes\Database.php:60
+Stack trace:
+#0 C:\xampp\htdocs\School-LMS\includes\Database.php(60): mysqli_stmt->bind_param('lacernakingjero...', 'jeumwoo')
+#1 C:\xampp\htdocs\School-LMS\includes\Auth.php(98): Database->bind('ss', 'jeumwoo', 'lacernakingjero...')
+#2 C:\xampp\htdocs\School-LMS\register.php(31): Auth->register('jeumwoo', 'lacernakingjero...', 'password', 'password', 'King Jerome', 'Lacerna')
+#3 {main}
+  thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60

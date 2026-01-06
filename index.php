@@ -503,11 +503,13 @@ try {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
+            justify-items: center;
         }
 
         .about-image {
-            width: 100%;
-            height: 250px;
+            width: 220px;
+            aspect-ratio: 1 / 1;
+            height: auto;
             border-radius: 50%;
             object-fit: cover;
             box-shadow: var(--shadow-lg);
@@ -1035,6 +1037,9 @@ try {
 
             .about-images {
                 order: -1;
+            }
+            .about-image {
+                width: 160px;
             }
 
             .partners-grid {

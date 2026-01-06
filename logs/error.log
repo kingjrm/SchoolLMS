@@ -515,3 +515,7 @@ Stack trace:
 [06-Jan-2026 15:44:57 UTC] PHP Deprecated:  substr(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 302
 [06-Jan-2026 15:44:57 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 304
 [06-Jan-2026 15:44:57 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 304
+[06-Jan-2026 15:59:47 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:59:47 UTC] PHP Deprecated:  substr(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:59:47 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 304
+[06-Jan-2026 15:59:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 304

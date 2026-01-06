@@ -502,3 +502,16 @@ Stack trace:
 #2 C:\xampp\htdocs\School-LMS\register.php(31): Auth->register('jeumwoo', 'lacernakingjero...', 'password', 'password', 'King Jerome', 'Lacerna')
 #3 {main}
   thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[06-Jan-2026 15:34:27 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\School-LMS\register.php on line 458
+[06-Jan-2026 15:40:16 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 300
+[06-Jan-2026 15:40:16 UTC] PHP Deprecated:  substr(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 300
+[06-Jan-2026 15:40:16 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:40:16 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:44:56 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:44:56 UTC] PHP Deprecated:  substr(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:44:56 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 304
+[06-Jan-2026 15:44:56 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 304
+[06-Jan-2026 15:44:57 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:44:57 UTC] PHP Deprecated:  substr(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 302
+[06-Jan-2026 15:44:57 UTC] PHP Warning:  Undefined array key "name" in C:\xampp\htdocs\School-LMS\instructors.php on line 304
+[06-Jan-2026 15:44:57 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\School-LMS\instructors.php on line 304

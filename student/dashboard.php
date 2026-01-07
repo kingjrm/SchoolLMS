@@ -78,25 +78,25 @@ try {
 ?>
 
         <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));">
-            <div class="stat-card" style="display:flex;align-items:center;gap:1rem">
-                <div style="width:44px;height:44px;border-radius:.8rem;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#4f46e5;font-weight:700">%</div>
+            <div class="stat-card" style="display:flex;align-items:center;gap:0.8rem;padding:1rem">
+                <div style="width:40px;height:40px;border-radius:0.6rem;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:#4f46e5;font-weight:700;font-size:1.1rem">%</div>
                 <div>
-                    <div class="stat-value" style="margin:0"><?php echo $progressPercent; ?>%</div>
-                    <div class="stat-label">Student Progress</div>
+                    <div class="stat-value" style="margin:0;font-size:1.5rem"><?php echo $progressPercent; ?>%</div>
+                    <div class="stat-label" style="font-size:0.8rem">Student Progress</div>
                 </div>
             </div>
-            <div class="stat-card" style="display:flex;align-items:center;gap:1rem">
-                <div style="width:44px;height:44px;border-radius:.8rem;background:#ecfeff;display:flex;align-items:center;justify-content:center;color:#0891b2;font-weight:700">%</div>
+            <div class="stat-card" style="display:flex;align-items:center;gap:0.8rem;padding:1rem">
+                <div style="width:40px;height:40px;border-radius:0.6rem;background:#ecfeff;display:flex;align-items:center;justify-content:center;color:#0891b2;font-weight:700;font-size:1.1rem">%</div>
                 <div>
-                    <div class="stat-value" style="margin:0"><?php echo $activityPercent; ?>%</div>
-                    <div class="stat-label">Total Activity (7d)</div>
+                    <div class="stat-value" style="margin:0;font-size:1.5rem"><?php echo $activityPercent; ?>%</div>
+                    <div class="stat-label" style="font-size:0.8rem">Total Activity (7d)</div>
                 </div>
             </div>
-            <div class="stat-card" style="display:flex;align-items:center;gap:1rem">
-                <div style="width:44px;height:44px;border-radius:.8rem;background:#fef3c7;display:flex;align-items:center;justify-content:center;color:#b45309;font-weight:700">⏱</div>
+            <div class="stat-card" style="display:flex;align-items:center;gap:0.8rem;padding:1rem">
+                <div style="width:40px;height:40px;border-radius:0.6rem;background:#fef3c7;display:flex;align-items:center;justify-content:center;color:#b45309;font-weight:700;font-size:1.1rem">⏱</div>
                 <div>
-                    <div class="stat-value" style="margin:0"><?php echo htmlspecialchars($totalTimeText); ?></div>
-                    <div class="stat-label">Total Time</div>
+                    <div class="stat-value" style="margin:0;font-size:1.5rem"><?php echo htmlspecialchars($totalTimeText); ?></div>
+                    <div class="stat-label" style="font-size:0.8rem">Total Time</div>
                 </div>
             </div>
         </div>

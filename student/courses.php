@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_by_code'])) {
 // Handle enrollment with section selection
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enroll_course'])) {
     $course_id = (int)$_POST['course_id'];
-    $section_id = (int)$_POST['section_id'] ?? null;
     
     try {
         // Check if already enrolled
@@ -58,38 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enroll_course'])) {
         if ($stmt->rowCount() > 0) {
             $enroll_error = "You are already enrolled in this course.";
         } else {
-            // Check section capacity
-            if ($section_id) {
-                $stmt = $pdo->prepare("SELECT current_students, max_students FROM course_sections WHERE id = ?");
-                $stmt->execute([$section_id]);
-                $section = $stmt->fetch(PDO::FETCH_ASSOC);
-                
-                if ($section['current_students'] >= $section['max_students']) {
-                    $enroll_error = "This section is full. Please choose another section.";
-                } else {
-                    // Enroll student
-                    $stmt = $pdo->prepare("INSERT INTO enrollments (course_id, section_id, student_id, enrollment_date) VALUES (?, ?, ?, CURDATE())");
-                    $stmt->execute([$course_id, $section_id, $student_id]);
-                    
-                    // Update section count
-                    $stmt = $pdo->prepare("UPDATE course_sections SET current_students = current_students + 1 WHERE id = ?");
-                    $stmt->execute([$section_id]);
-                    
-                    $enroll_message = "Successfully enrolled in the course!";
-                }
-            } else {
-                // Enroll without section
-                $stmt = $pdo->prepare("INSERT INTO enrollments (course_id, student_id, enrollment_date) VALUES (?, ?, CURDATE())");
-                $stmt->execute([$course_id, $student_id]);
-                $enroll_message = "Successfully enrolled in the course!";
-            }
+            // Enroll without section
+            $stmt = $pdo->prepare("INSERT INTO enrollments (course_id, student_id, enrollment_date) VALUES (?, ?, CURDATE())");
+            $stmt->execute([$course_id, $student_id]);
+            $enroll_message = "Successfully enrolled in the course!";
         }
     } catch (Exception $e) {
         $enroll_error = "Enrollment failed. Please try again.";
     }
 }
 
-studentLayoutStart('courses', 'My Courses');
+studentLayoutStart('courses', 'My Courses', false);
+
+// Get filter values from query parameters
+$search = $_GET['search'] ?? '';
+$filter_teacher = $_GET['teacher'] ?? '';
+$filter_term = $_GET['term'] ?? '';
 ?>
 
     <div class="courses-container">
@@ -105,6 +88,78 @@ studentLayoutStart('courses', 'My Courses');
             </div>
         <?php endif; ?>
 
+        <!-- Filter Section -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h3 class="card-title">🔍 Filter Courses</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="filter-form">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="search">Search by Title or Code:</label>
+                            <input type="text" id="search" name="search" placeholder="Course title or code..." value="<?php echo htmlspecialchars($search); ?>">
+                        </div>
+                        <div class="filter-group">
+                            <label for="teacher">Filter by Instructor:</label>
+                            <select id="teacher" name="teacher">
+                                <option value="">All Instructors</option>
+                                <?php
+                                try {
+                                    $stmt = $pdo->prepare("
+                                        SELECT DISTINCT u.id, u.first_name, u.last_name
+                                        FROM enrollments e 
+                                        JOIN courses c ON e.course_id = c.id 
+                                        JOIN users u ON c.teacher_id = u.id 
+                                        WHERE e.student_id = ?
+                                        ORDER BY u.first_name, u.last_name
+                                    ");
+                                    $stmt->execute([$student_id]);
+                                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($teachers as $teacher):
+                                        $teacher_name = $teacher['first_name'] . ' ' . $teacher['last_name'];
+                                ?>
+                                        <option value="<?php echo $teacher['id']; ?>" <?php echo $filter_teacher == $teacher['id'] ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($teacher_name); ?>
+                                        </option>
+                                <?php endforeach; ?>
+                                <?php } catch (Exception $e) {} ?>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="term">Filter by Term:</label>
+                            <select id="term" name="term">
+                                <option value="">All Terms</option>
+                                <?php
+                                try {
+                                    $stmt = $pdo->prepare("
+                                        SELECT DISTINCT t.id, t.name
+                                        FROM enrollments e 
+                                        JOIN courses c ON e.course_id = c.id 
+                                        LEFT JOIN academic_terms t ON c.term_id = t.id 
+                                        WHERE e.student_id = ?
+                                        ORDER BY t.name DESC
+                                    ");
+                                    $stmt->execute([$student_id]);
+                                    $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($terms as $term):
+                                ?>
+                                        <option value="<?php echo $term['id']; ?>" <?php echo $filter_term == $term['id'] ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($term['name'] ?? 'Unassigned'); ?>
+                                        </option>
+                                <?php endforeach; ?>
+                                <?php } catch (Exception $e) {} ?>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="courses.php" class="btn btn-secondary">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Enrolled Courses Section -->
         <div class="card" style="margin-bottom: 2rem;">
             <div class="card-header">
@@ -112,23 +167,48 @@ studentLayoutStart('courses', 'My Courses');
             </div>
             <div class="card-body">
                 <?php
-                $db->prepare("
-                    SELECT c.*, t.name as term_name, u.first_name, u.last_name,
-                    cs.section_code,
-                    (SELECT COUNT(*) FROM assignments WHERE course_id = c.id) as assignment_count,
-                    (SELECT COUNT(*) FROM course_materials WHERE course_id = c.id) as material_count,
-                    (SELECT ROUND(AVG(CAST(g.score as DECIMAL(5,2))), 2) FROM grades g 
-                     JOIN assignments a ON g.assignment_id = a.id 
-                     WHERE a.course_id = c.id AND g.student_id = ?) as avg_grade
-                    FROM enrollments e 
-                    JOIN courses c ON e.course_id = c.id 
-                    JOIN academic_terms t ON c.term_id = t.id 
-                    JOIN users u ON c.teacher_id = u.id 
-                    LEFT JOIN course_sections cs ON e.section_id = cs.id
-                    WHERE e.student_id = ? AND e.status = 'enrolled' 
-                    ORDER BY c.created_at DESC
-                ")->bind('ii', $student_id, $student_id)->execute();
-                $courses = $db->fetchAll();
+                try {
+                    // Build query with filters
+                    $where_conditions = ['e.student_id = ?'];
+                    $params = [$student_id];
+                    
+                    if (!empty($search)) {
+                        $where_conditions[] = "(c.title LIKE ? OR c.code LIKE ?)";
+                        $search_param = '%' . $search . '%';
+                        $params[] = $search_param;
+                        $params[] = $search_param;
+                    }
+                    
+                    if (!empty($filter_teacher)) {
+                        $where_conditions[] = "c.teacher_id = ?";
+                        $params[] = (int)$filter_teacher;
+                    }
+                    
+                    if (!empty($filter_term)) {
+                        $where_conditions[] = "c.term_id = ?";
+                        $params[] = (int)$filter_term;
+                    }
+                    
+                    $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+                    
+                    $stmt = $pdo->prepare("
+                        SELECT c.*, t.name as term_name, u.first_name, u.last_name,
+                        e.enrollment_date
+                        FROM enrollments e 
+                        JOIN courses c ON e.course_id = c.id 
+                        LEFT JOIN academic_terms t ON c.term_id = t.id 
+                        JOIN users u ON c.teacher_id = u.id 
+                        $where_clause
+                        ORDER BY e.enrollment_date DESC
+                    ");
+                    $stmt->execute($params);
+                    $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {
+                    $courses = [];
+                    echo '<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:0.5rem;padding:1rem;margin-bottom:1rem;color:#991b1b">';
+                    echo 'Error loading courses: ' . htmlspecialchars($e->getMessage());
+                    echo '</div>';
+                }
 
                 if (!empty($courses)):
                 ?>
@@ -139,30 +219,16 @@ studentLayoutStart('courses', 'My Courses');
                                 <div>
                                     <h4 class="course-title"><?php echo htmlspecialchars($course['title']); ?></h4>
                                     <p class="course-code"><?php echo htmlspecialchars($course['code']); ?></p>
-                                    <?php if ($course['section_code']): ?>
-                                        <p class="course-section">Section: <?php echo htmlspecialchars($course['section_code']); ?></p>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="course-card-body">
                                 <p class="course-info"><strong>Instructor:</strong> <?php echo htmlspecialchars($course['first_name'] . ' ' . $course['last_name']); ?></p>
-                                <p class="course-info"><strong>Term:</strong> <?php echo htmlspecialchars($course['term_name']); ?></p>
-                                <p class="course-info"><strong>Credits:</strong> <?php echo $course['credits']; ?></p>
+                                <p class="course-info"><strong>Term:</strong> <?php echo htmlspecialchars($course['term_name'] ?? 'N/A'); ?></p>
+                                <p class="course-info"><strong>Credits:</strong> <?php echo $course['credits'] ?? 'N/A'; ?></p>
+                                <p class="course-info"><strong>Enrolled:</strong> <?php echo date('M d, Y', strtotime($course['enrollment_date'])); ?></p>
                                 
-                                <?php if ($course['avg_grade']): ?>
-                                    <div class="course-grade">
-                                        <span class="grade-label">Average Grade:</span>
-                                        <span class="grade-value"><?php echo $course['avg_grade']; ?>%</span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <div class="course-stats">
-                                    <span><?php echo $course['material_count']; ?> Materials</span>
-                                    <span>•</span>
-                                    <span><?php echo $course['assignment_count']; ?> Assignments</span>
-                                </div>
                                 <div class="course-actions">
-                                    <a href="course-details.php?id=<?php echo $course['id']; ?>" class="btn btn-primary">View Course</a>
+                                    <a href="assignments.php?course_id=<?php echo $course['id']; ?>" class="btn btn-primary">View Assignments</a>
                                 </div>
                             </div>
                         </div>
@@ -173,107 +239,70 @@ studentLayoutStart('courses', 'My Courses');
                 <?php endif; ?>
             </div>
         </div>
-
-        <!-- Available Courses Section -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">🎓 Available Courses to Enroll</h3>
-            </div>
-            <div class="card-body">
-                <?php
-                try {
-                    // Get active courses not yet enrolled
-                    $query = "
-                        SELECT c.*, t.name as term_name, u.first_name, u.last_name,
-                        (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id AND status = 'enrolled') as enrolled_count,
-                        (SELECT COUNT(DISTINCT cs.id) FROM course_sections WHERE course_id = c.id AND status = 'active') as section_count
-                        FROM courses c 
-                        JOIN academic_terms t ON c.term_id = t.id 
-                        JOIN users u ON c.teacher_id = u.id 
-                        WHERE c.status = 'active' AND t.is_active = TRUE
-                        AND c.id NOT IN (SELECT course_id FROM enrollments WHERE student_id = ? AND status IN ('enrolled', 'completed'))
-                        ORDER BY c.created_at DESC
-                    ";
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute([$student_id]);
-                    $available = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } catch (Exception $e) {
-                    $available = [];
-                }
-
-                if (!empty($available)):
-                ?>
-                    <div class="courses-grid">
-                        <?php foreach ($available as $course): ?>
-                        <div class="course-card available-course-card">
-                            <div class="course-card-header">
-                                <div>
-                                    <h4 class="course-title"><?php echo htmlspecialchars($course['title']); ?></h4>
-                                    <p class="course-code"><?php echo htmlspecialchars($course['code']); ?></p>
-                                </div>
-                            </div>
-                            <div class="course-card-body">
-                                <p class="course-info"><strong>Instructor:</strong> <?php echo htmlspecialchars($course['first_name'] . ' ' . $course['last_name']); ?></p>
-                                <p class="course-info"><strong>Term:</strong> <?php echo htmlspecialchars($course['term_name']); ?></p>
-                                <p class="course-info"><strong>Credits:</strong> <?php echo $course['credits']; ?></p>
-                                <p class="course-info"><strong>Enrolled:</strong> <?php echo $course['enrolled_count']; ?>/<?php echo $course['max_students']; ?></p>
-                                
-                                <div class="course-description">
-                                    <?php if ($course['description']): ?>
-                                        <p><?php echo substr(htmlspecialchars($course['description']), 0, 100); ?>...</p>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <?php if ($course['section_count'] > 0): ?>
-                                    <form method="POST" class="enroll-form">
-                                        <input type="hidden" name="enroll_course" value="1">
-                                        <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
-                                        
-                                        <div class="form-group" style="margin-bottom: 0.75rem;">
-                                            <label for="section_<?php echo $course['id']; ?>" style="display: block; margin-bottom: 0.25rem; font-size: 0.85rem; font-weight: 600;">Select Section:</label>
-                                            <select name="section_id" id="section_<?php echo $course['id']; ?>" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.85rem;">
-                                                <option value="">-- Choose a section --</option>
-                                                <?php
-                                                $stmt = $pdo->prepare("SELECT id, section_code, current_students, max_students FROM course_sections WHERE course_id = ? AND status = 'active' ORDER BY section_code");
-                                                $stmt->execute([$course['id']]);
-                                                $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                                foreach ($sections as $section):
-                                                    $available_spots = $section['max_students'] - $section['current_students'];
-                                                    $disabled = $available_spots <= 0 ? 'disabled' : '';
-                                                ?>
-                                                    <option value="<?php echo $section['id']; ?>" <?php echo $disabled; ?>>
-                                                        <?php echo htmlspecialchars($section['section_code']); ?> 
-                                                        (<?php echo $section['current_students']; ?>/<?php echo $section['max_students']; ?>)
-                                                        <?php echo $disabled ? ' [FULL]' : ''; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn btn-primary" style="width: 100%;">Enroll Now</button>
-                                    </form>
-                                <?php else: ?>
-                                    <form method="POST" class="enroll-form">
-                                        <input type="hidden" name="enroll_course" value="1">
-                                        <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
-                                        <button type="submit" class="btn btn-primary" style="width: 100%;">Enroll Now</button>
-                                    </form>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <p class="no-data">No available courses at this time.</p>
-                <?php endif; ?>
-            </div>
-        </div>
     </div>
 
     <style>
         .courses-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 0.55rem 0.75rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 0.4rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #1f2937;
+            transition: border-color 0.2s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1f2937;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
         }
 
         .courses-grid {
@@ -294,7 +323,7 @@ studentLayoutStart('courses', 'My Courses');
 
         .course-card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: #3b82f6;
+            border-color: #f97316;
             transform: translateY(-2px);
         }
 
@@ -304,7 +333,7 @@ studentLayoutStart('courses', 'My Courses');
 
         .course-card-header {
             padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 2px solid #f97316;
             background: #fafbfc;
         }
 
@@ -404,12 +433,12 @@ studentLayoutStart('courses', 'My Courses');
         }
 
         .btn-primary {
-            background-color: #3b82f6;
+            background-color: #f97316;
             color: #fff;
         }
 
         .btn-primary:hover {
-            background-color: #2563eb;
+            background-color: #ea580c;
         }
 
         .no-data {
@@ -463,112 +492,84 @@ studentLayoutStart('courses', 'My Courses');
                 grid-template-columns: 1fr;
             }
         }
-        /* Floating Join Button */
-        .fab-join {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: none;
-            background: #3b82f6;
-            color: #fff;
-            font-size: 28px;
-            font-weight: 700;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
-            cursor: pointer;
-            transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
-            z-index: 1000;
+        
+        /* Hide global button, show courses button */
+        .fab-join { display: none !important; }
+        
+        /* Courses-specific floating button */
+        .fab-courses {
+            position: fixed !important;
+            right: 24px !important;
+            bottom: 24px !important;
+            width: 56px !important;
+            height: 56px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            background: #3b82f6 !important;
+            color: #fff !important;
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35) !important;
+            cursor: pointer !important;
+            z-index: 99999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s ease !important;
         }
-        .fab-join:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37, 99, 235, 0.4); }
-        .fab-join:active { transform: translateY(0); }
-
-        /* Modal styles */
-        .join-modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(17,24,39,0.55);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+        .fab-courses:hover {
+            background: #2563eb !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 28px rgba(37, 99, 235, 0.4) !important;
         }
-        .join-modal {
-            width: 100%;
-            max-width: 460px;
-            background: #ffffff;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 20px 45px rgba(0,0,0,0.2);
-            transform: translateY(8px);
-            opacity: 0;
-            transition: all 0.2s ease;
-        }
-        .join-modal.show { transform: translateY(0); opacity: 1; }
-        .join-modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-        .join-modal-title { margin: 0; font-size: 1rem; font-weight: 700; color: #1f2937; }
-        .join-close { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: #6b7280; }
-        .join-modal-body { padding: 1.25rem; }
-        .join-input { width: 100%; padding: 0.875rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; outline: none; }
-        .join-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-        .join-help { font-size: 0.8125rem; color: #6b7280; margin-top: 0.5rem; }
-        .join-actions { display: flex; gap: 0.5rem; justify-content: flex-end; padding: 0 1.25rem 1.25rem; }
-        .btn-secondary { background: #f3f4f6; color: #374151; }
-        .btn-secondary:hover { background: #e5e7eb; }
     </style>
 
-    <!-- Floating Join Button -->
-    <button type="button" class="fab-join" id="openJoinModal" aria-label="Join course">+</button>
+    <!-- Floating Join Button for Courses -->
+    <button type="button" class="fab-courses" id="coursesFabBtn" onclick="document.getElementById('joinModalCourses').style.display='flex'" aria-label="Join course">+</button>
 
     <!-- Join Code Modal -->
-    <div class="join-modal-backdrop" id="joinModalBackdrop" aria-hidden="true">
-        <div class="join-modal" id="joinModal">
-            <div class="join-modal-header">
-                <h3 class="join-modal-title">Join Course with Code</h3>
-                <button type="button" class="join-close" id="closeJoinModal" aria-label="Close">×</button>
+    <div id="joinModalCourses" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:99998">
+        <div style="width:100%;max-width:460px;background:#fff;border-radius:12px;padding:0;box-shadow:0 20px 45px rgba(0,0,0,0.2)">
+            <div style="padding:1rem 1.25rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center">
+                <h3 style="margin:0;font-size:1rem;font-weight:700;color:#1f2937">Join Course with Code</h3>
+                <button type="button" onclick="document.getElementById('joinModalCourses').style.display='none'" style="background:transparent;border:none;font-size:1.5rem;cursor:pointer;color:#6b7280">×</button>
             </div>
-            <form method="POST">
-                <div class="join-modal-body">
-                    <label style="display:block; font-size: 0.875rem; color:#374151; margin-bottom:0.5rem; font-weight:600;">Course Code</label>
-                    <input class="join-input" type="text" name="join_code" id="joinCodeInput" placeholder="e.g., ABC123" maxlength="10" required>
-                    <div class="join-help">Ask your instructor for the join code.</div>
+            <form method="POST" action="courses.php">
+                <div style="padding:1.25rem">
+                    <label style="display:block;font-size:0.875rem;color:#374151;margin-bottom:0.5rem;font-weight:600">Course Code</label>
+                    <input type="text" name="join_code" placeholder="e.g., ABC123" maxlength="10" required style="width:100%;padding:0.875rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.5rem;font-size:1rem;text-transform:uppercase">
+                    <div style="font-size:0.8125rem;color:#6b7280;margin-top:0.5rem">Ask your instructor for the join code.</div>
                 </div>
-                <div class="join-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelJoin">Cancel</button>
-                    <button type="submit" class="btn btn-primary" name="join_by_code" value="1">Join</button>
+                <div style="display:flex;gap:0.5rem;justify-content:flex-end;padding:0 1.25rem 1.25rem">
+                    <button type="button" onclick="document.getElementById('joinModalCourses').style.display='none'" style="background:#f3f4f6;color:#374151;padding:0.5rem 1rem;border:none;border-radius:0.5rem;cursor:pointer">Cancel</button>
+                    <button type="submit" name="join_by_code" value="1" style="background:#3b82f6;color:#fff;padding:0.5rem 1rem;border:none;border-radius:0.5rem;cursor:pointer;font-weight:600">Join</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-    (function(){
-        const fab = document.getElementById('openJoinModal');
-        const backdrop = document.getElementById('joinModalBackdrop');
-        const modal = document.getElementById('joinModal');
-        const closeBtn = document.getElementById('closeJoinModal');
-        const cancelBtn = document.getElementById('cancelJoin');
-        const codeInput = document.getElementById('joinCodeInput');
-
-        function openModal(){
-            backdrop.style.display = 'flex';
-            requestAnimationFrame(() => modal.classList.add('show'));
-            setTimeout(() => codeInput && codeInput.focus(), 150);
+    // Move the FAB button outside the content wrapper so fixed positioning works
+    document.addEventListener('DOMContentLoaded', function() {
+        var fab = document.getElementById('coursesFabBtn');
+        var modal = document.getElementById('joinModalCourses');
+        if (fab) {
+            document.body.appendChild(fab);
+            document.body.appendChild(modal);
+            fab.style.display = 'flex';
         }
-        function closeModal(){
-            modal.classList.remove('show');
-            setTimeout(() => { backdrop.style.display = 'none'; }, 150);
+        
+        // Close modal when clicking outside of it
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
         }
-        function clickOutside(e){ if(e.target === backdrop) closeModal(); }
-
-        if (fab) fab.addEventListener('click', openModal);
-        if (closeBtn) closeBtn.addEventListener('click', closeModal);
-        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
-        if (backdrop) backdrop.addEventListener('click', clickOutside);
-        if (codeInput) codeInput.addEventListener('input', () => { codeInput.value = codeInput.value.toUpperCase(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && backdrop.style.display === 'flex') closeModal(); });
-    })();
+    });
     </script>
+
+</div>
 
 <?php studentLayoutEnd(); ?>

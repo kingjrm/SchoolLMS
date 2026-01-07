@@ -1,225 +1,227 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Materials - School LMS</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <?php
-    require_once '../includes/config.php';
-    require_once '../includes/Auth.php';
-    require_once '../includes/Database.php';
-    require_once '../includes/helpers.php';
+<?php
+require_once '../includes/config.php';
+require_once '../includes/Auth.php';
+require_once '../includes/teacher_layout.php';
 
-    Auth::requireRole('teacher');
-    $user = Auth::getCurrentUser();
-    $db = new Database();
-    $teacher_id = $user['id'];
+Auth::requireRole('teacher');
+$user = Auth::getCurrentUser();
+$teacher_id = $user['id'];
 
-    $message = '';
-    $course_id = (int)($_GET['course_id'] ?? 0);
+$message = '';
+$error = '';
+$course_id = (int)($_GET['course_id'] ?? 0);
 
-    // Handle upload
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-        $title = sanitize($_POST['title'] ?? '');
-        $description = sanitize($_POST['description'] ?? '');
-        $course_id = (int)($_POST['course_id'] ?? 0);
+// Handle upload
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload') {
+    $title = trim($_POST['title'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $course_id = intval($_POST['course_id'] ?? 0);
 
-        if (empty($title) || $course_id === 0) {
-            $message = 'Title and course are required';
-        } else {
+    if (empty($title)) {
+        $error = 'Title is required';
+    } elseif ($course_id === 0) {
+        $error = 'Please select a course';
+    } else {
+        try {
             // Verify teacher owns this course
-            $db->prepare("SELECT id FROM courses WHERE id = ? AND teacher_id = ?")->bind('ii', $course_id, $teacher_id)->execute();
-            if ($db->getResult()->num_rows === 0) {
-                $message = 'Invalid course';
+            $stmt = $pdo->prepare("SELECT id FROM courses WHERE id = ? AND teacher_id = ?");
+            $stmt->execute([$course_id, $teacher_id]);
+            
+            if (!$stmt->fetch()) {
+                $error = 'Invalid course';
             } else {
-                // Handle file upload if present
                 $file_path = null;
                 $file_type = null;
+                
+                // Handle file upload if present
                 if (isset($_FILES['material_file']) && $_FILES['material_file']['size'] > 0) {
-                    $upload = uploadFile($_FILES['material_file'], 'materials/');
-                    if ($upload['success']) {
-                        $file_path = $upload['file'];
-                        $file_type = pathinfo($_FILES['material_file']['name'], PATHINFO_EXTENSION);
+                    $allowed = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'txt', 'zip'];
+                    $file_ext = strtolower(pathinfo($_FILES['material_file']['name'], PATHINFO_EXTENSION));
+                    
+                    if (!in_array($file_ext, $allowed)) {
+                        $error = 'File type not allowed';
+                    } elseif ($_FILES['material_file']['size'] > 50 * 1024 * 1024) {
+                        $error = 'File too large (max 50MB)';
                     } else {
-                        $message = $upload['message'];
+                        $upload_dir = '../assets/uploads/materials/';
+                        if (!is_dir($upload_dir)) {
+                            mkdir($upload_dir, 0755, true);
+                        }
+                        
+                        $file_name = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $_FILES['material_file']['name']);
+                        $file_path = 'materials/' . $file_name;
+                        
+                        if (move_uploaded_file($_FILES['material_file']['tmp_name'], $upload_dir . $file_name)) {
+                            $file_type = $file_ext;
+                        } else {
+                            $error = 'Failed to upload file';
+                        }
                     }
                 }
-
-                if (empty($message)) {
-                    $query = "INSERT INTO course_materials (course_id, title, description, file_path, file_type, uploaded_by) VALUES (?, ?, ?, ?, ?, ?)";
-                    $db->prepare($query)
-                        ->bind('ssssss', $course_id, $title, $description, $file_path, $file_type, $teacher_id)
-                        ->execute();
-                    $message = 'Material uploaded successfully';
+                
+                if (empty($error)) {
+                    $stmt = $pdo->prepare(
+                        "INSERT INTO course_materials (course_id, title, description, file_path, file_type, uploaded_by) 
+                         VALUES (?, ?, ?, ?, ?, ?)"
+                    );
+                    $stmt->execute([$course_id, $title, $description, $file_path, $file_type, $teacher_id]);
+                    $message = 'Material uploaded successfully!';
                 }
             }
+        } catch (Exception $e) {
+            $error = 'Error: ' . $e->getMessage();
         }
     }
+}
 
-    // Handle delete
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
-        $material_id = (int)$_POST['delete_id'];
-        $db->prepare("SELECT file_path FROM course_materials WHERE id = ?")->bind('i', $material_id)->execute();
-        $material = $db->fetch();
+// Handle delete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    $material_id = intval($_POST['material_id'] ?? 0);
+    
+    try {
+        $stmt = $pdo->prepare("SELECT file_path FROM course_materials WHERE id = ? AND course_id IN (SELECT id FROM courses WHERE teacher_id = ?)");
+        $stmt->execute([$material_id, $teacher_id]);
+        $material = $stmt->fetch();
         
-        if ($material && $material['file_path']) {
-            deleteFile($material['file_path']);
+        if ($material) {
+            if ($material['file_path'] && file_exists('../assets/uploads/' . $material['file_path'])) {
+                unlink('../assets/uploads/' . $material['file_path']);
+            }
+            $stmt = $pdo->prepare("DELETE FROM course_materials WHERE id = ?");
+            $stmt->execute([$material_id]);
+            $message = 'Material deleted successfully!';
+        } else {
+            $error = 'Material not found';
         }
-        $db->prepare("DELETE FROM course_materials WHERE id = ?")->bind('i', $material_id)->execute();
-        $message = 'Material deleted';
+    } catch (Exception $e) {
+        $error = 'Error deleting material: ' . $e->getMessage();
     }
-    ?>
+}
 
-    <div class="main-layout">
-        <aside class="sidebar">
-            <h1>School LMS</h1>
-            <nav class="nav-menu">
-                <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-                <li class="nav-item"><a href="courses.php" class="nav-link">Courses</a></li>
-                <li class="nav-item"><a href="materials.php" class="nav-link active">Materials</a></li>
-                <li class="nav-item"><a href="assignments.php" class="nav-link">Assignments</a></li>
-                <li class="nav-item"><a href="quizzes.php" class="nav-link">Quizzes</a></li>
-                <li class="nav-item"><a href="grades.php" class="nav-link">Grades</a></li>
-                <li class="nav-item"><a href="announcements.php" class="nav-link">Announcements</a></li>
-            </nav>
-        </aside>
+teacherLayoutStart('materials', 'Course Materials');
+?>
 
-        <main class="main-content">
-            <div class="topbar">
-                <h1>Course Materials</h1>
-                <div class="user-info">
-                    <span><?php echo htmlspecialchars($user['full_name']); ?></span>
-                    <div class="user-menu">
-                        <button class="user-btn" onclick="toggleDropdown()">Menu</button>
-                        <div class="dropdown-menu" id="dropdown">
-                            <a href="../logout.php" class="dropdown-item">Logout</a>
-                        </div>
-                    </div>
-                </div>
+<div class="content-card">
+    <?php if ($message): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
+    <?php endif; if ($error): ?>
+        <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+
+    <!-- Upload Form -->
+    <div class="card" style="margin-bottom:2rem">
+        <div class="card-header">
+            <h2>Upload Material</h2>
+        </div>
+        <form method="POST" enctype="multipart/form-data" class="form-container">
+            <input type="hidden" name="action" value="upload">
+            
+            <div class="form-group">
+                <label>Title <span style="color:#ef4444">*</span></label>
+                <input type="text" name="title" required>
             </div>
-
-            <?php if ($message): ?>
-                <?php echo showAlert(strpos($message, 'Error') === false ? 'success' : 'error', $message); ?>
-            <?php endif; ?>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Upload Material</h3>
-                </div>
-                <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="course_id">Course</label>
-                            <select id="course_id" name="course_id" required>
-                                <option value="">Select Course</option>
-                                <?php
-                                $db->prepare("
-                                    SELECT id, code, title FROM courses 
-                                    WHERE teacher_id = ? AND status = 'active' 
-                                    ORDER BY title
-                                ")->bind('i', $teacher_id)->execute();
-                                $courses = $db->fetchAll();
-                                foreach ($courses as $c):
-                                ?>
-                                    <option value="<?php echo $c['id']; ?>">
-                                        <?php echo htmlspecialchars($c['code'] . ' - ' . $c['title']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" id="title" name="title" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" name="description"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="material_file">Upload File (Optional)</label>
-                            <input type="file" id="material_file" name="material_file">
-                            <span class="help-text">Supported: PDF, DOC, DOCX, TXT, PPT, PPTX, XLS, XLSX, ZIP, JPG, PNG, GIF (Max 50MB)</span>
-                        </div>
-
-                        <button type="submit" name="submit" class="btn btn-primary">Upload</button>
-                    </form>
-                </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="3"></textarea>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">All Materials</h3>
-                </div>
-                <div class="card-body">
+            
+            <div class="form-group">
+                <label>Course <span style="color:#ef4444">*</span></label>
+                <select name="course_id" required>
+                    <option value="">Select a course...</option>
                     <?php
-                    $query = "
-                        SELECT m.*, c.title as course_title, c.code 
-                        FROM course_materials m 
-                        JOIN courses c ON m.course_id = c.id 
-                        WHERE c.teacher_id = ? 
-                        ORDER BY m.upload_date DESC
-                    ";
-                    $db->prepare($query)->bind('i', $teacher_id)->execute();
-                    $materials = $db->fetchAll();
-
-                    if (!empty($materials)):
+                    try {
+                        $stmt = $pdo->prepare("SELECT id, title FROM courses WHERE teacher_id = ? AND status = 'active' ORDER BY title");
+                        $stmt->execute([$teacher_id]);
+                        while ($course = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            echo '<option value="' . $course['id'] . '">' . htmlspecialchars($course['title']) . '</option>';
+                        }
+                    } catch (Exception $e) {
+                        echo '<option value="">Error loading courses</option>';
+                    }
                     ?>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Course</th>
-                                    <th>Type</th>
-                                    <th>Uploaded</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($materials as $material): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($material['title']); ?></td>
-                                    <td><?php echo htmlspecialchars($material['code'] . ' - ' . $material['course_title']); ?></td>
-                                    <td><?php echo htmlspecialchars(strtoupper($material['file_type'] ?? 'link')); ?></td>
-                                    <td><?php echo formatDate($material['upload_date'], 'M d, Y'); ?></td>
-                                    <td>
-                                        <?php if ($material['file_path']): ?>
-                                            <a href="../<?php echo htmlspecialchars($material['file_path']); ?>" target="_blank" class="btn btn-secondary btn-sm">Download</a>
-                                        <?php endif; ?>
-                                        <form method="POST" style="display: inline;" onsubmit="return confirm('Delete this material?');">
-                                            <input type="hidden" name="delete_id" value="<?php echo $material['id']; ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php else: ?>
-                        <p style="text-align: center; color: #9ca3af;">No materials uploaded</p>
-                    <?php endif; ?>
-                </div>
+                </select>
             </div>
-        </main>
+            
+            <div class="form-group">
+                <label>File (Optional)</label>
+                <input type="file" name="material_file">
+                <p style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">Max 50MB. Allowed: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT, ZIP</p>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Upload Material</button>
+        </form>
     </div>
 
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('active');
-        }
-
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('dropdown');
-            const userMenu = document.querySelector('.user-menu');
-            if (!userMenu.contains(event.target)) {
-                dropdown.classList.remove('active');
+    <!-- Materials List -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Course Materials</h2>
+        </div>
+        <div class="table-container">
+            <?php
+            try {
+                $stmt = $pdo->prepare("
+                    SELECT cm.*, c.title as course_title
+                    FROM course_materials cm
+                    JOIN courses c ON cm.course_id = c.id
+                    WHERE c.teacher_id = ?
+                    ORDER BY cm.upload_date DESC
+                ");
+                $stmt->execute([$teacher_id]);
+                $materials = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                if (!empty($materials)):
+            ?>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Course</th>
+                            <th>Description</th>
+                            <th>File</th>
+                            <th>Uploaded</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($materials as $material): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($material['title']); ?></td>
+                            <td><?php echo htmlspecialchars($material['course_title']); ?></td>
+                            <td style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?php echo htmlspecialchars(substr($material['description'] ?? '', 0, 30)); ?></td>
+                            <td>
+                                <?php if ($material['file_path']): ?>
+                                    <a href="../assets/uploads/<?php echo htmlspecialchars($material['file_path']); ?>" style="color:#3b82f6;text-decoration:none;font-size:0.75rem" download>Download</a>
+                                <?php else: ?>
+                                    <span style="color:#9ca3af;font-size:0.75rem">—</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo date('M d, Y', strtotime($material['upload_date'])); ?></td>
+                            <td>
+                                <form method="POST" style="display:inline">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="material_id" value="<?php echo $material['id']; ?>">
+                                    <button type="submit" class="btn-small btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php
+                else:
+            ?>
+                <p style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem">No materials uploaded yet.</p>
+            <?php
+                endif;
+            } catch (Exception $e) {
+                echo '<div style="color:#991b1b">Error loading materials</div>';
             }
-        });
-    </script>
-</body>
-</html>
+            ?>
+        </div>
+    </div>
+</div>
+
+<?php teacherLayoutEnd(); ?>

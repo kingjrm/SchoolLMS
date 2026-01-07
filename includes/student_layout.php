@@ -3,51 +3,54 @@
  * Shared Student Layout to keep sidebar/topbar consistent with dashboard
  */
 
-function studentLayoutStart(string $active, string $title) {
+function studentLayoutStart(string $active, string $title, bool $showJoinButton = true) {
+    global $SHOW_JOIN_BUTTON;
+    $SHOW_JOIN_BUTTON = $showJoinButton;
+    
     echo '<!DOCTYPE html><html lang="en"><head>';
     echo '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
     echo '<title>' . htmlspecialchars($title) . ' - School LMS</title>';
     echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">';
     echo "<style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg-primary:#ffffff;--bg-secondary:#f6f7fb;--bg-sidebar:#ffffff;--text-primary:#0f172a;--text-secondary:#475569;--border-color:#e5e7eb;--shadow:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 10px 25px rgba(0,0,0,.08);--primary-color:#3b82f6;--primary-dark:#2563eb}
+        :root{--bg-primary:#ffffff;--bg-secondary:#f6f7fb;--bg-sidebar:#01172a;--text-primary:#01172a;--text-secondary:#6b7280;--border-color:#e5e7eb;--shadow:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 10px 25px rgba(0,0,0,.08);--primary-color:#f97316;--primary-dark:#ea580c}
         body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-secondary);color:var(--text-primary);display:flex;min-height:100vh}
-        .sidebar{width:260px;background:var(--bg-sidebar);color:var(--text-primary);padding:1.25rem;position:fixed;height:100vh;overflow-y:auto;display:flex;flex-direction:column;border-right:1px solid var(--border-color)}
-        .sidebar-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border-color)}
-        .sidebar-header h1{font-size:1.05rem;margin-bottom:.25rem;color:var(--text-primary);letter-spacing:.02em;text-transform:uppercase}
-        .sidebar-header p{font-size:.75rem;color:#64748b}
+        .sidebar{width:240px;background:var(--bg-sidebar);color:#ffffff;padding:1rem;position:fixed;height:100vh;overflow-y:auto;display:flex;flex-direction:column;border-right:3px solid #f97316}
+        .sidebar-header{margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .sidebar-header h1{font-size:0.85rem;margin-bottom:0.15rem;color:#ffffff;letter-spacing:.02em;text-transform:uppercase;font-weight:700}
+        .sidebar-header p{font-size:0.65rem;color:rgba(255,255,255,0.7)}
         .sidebar-menu{list-style:none;flex:1}
-        .sidebar-menu li{margin-bottom:.5rem}
-        .sidebar-menu a{display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;color:#334155;text-decoration:none;border-radius:.6rem;font-size:.95rem;transition:all .2s}
-        .sidebar-menu a svg{width:20px;height:20px;stroke:#64748b;fill:none;stroke-width:2;transition:all .2s}
-        .sidebar-menu a:hover{background:#f0f4ff;color:#1e293b}
-        .sidebar-menu a:hover svg{stroke:#2563eb}
-        .sidebar-menu a.active{background:rgba(59,130,246,.12);color:#1d4ed8;outline:1px solid rgba(59,130,246,.15)}
-        .sidebar-menu a.active svg{stroke:#1d4ed8}
-        .sidebar-footer{border-top:1px solid var(--border-color);padding-top:1rem;margin-top:auto}
-        .footer-links{display:grid;gap:.5rem;margin-bottom:.75rem}
-        .footer-link{display:flex;align-items:center;gap:.6rem;color:#334155;text-decoration:none;padding:.45rem .5rem;border-radius:.5rem}
-        .footer-link:hover{background:#f1f5f9}
-        .footer-link svg{width:18px;height:18px;stroke:#64748b}
-        .logout-btn{width:100%;padding:.75rem 1rem;background:#3b82f6;color:#fff;border:none;border-radius:.6rem;font-size:.9rem;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:.5rem;justify-content:center;text-decoration:none}
-        .logout-btn:hover{background:#2563eb}
-        .main-content{margin-left:260px;flex:1;display:flex;flex-direction:column}
-        .topbar{background:var(--bg-secondary);border-bottom:1px solid var(--border-color);padding:1.1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
-        .topbar h2{font-size:1.05rem;font-weight:700}
-        .content{padding:1.25rem;flex:1;overflow-y:auto;width:100%}
+        .sidebar-menu li{margin-bottom:0.35rem}
+        .sidebar-menu a{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.65rem;color:rgba(255,255,255,0.8);text-decoration:none;border-radius:0.5rem;font-size:0.8rem;transition:all .2s}
+        .sidebar-menu a svg{width:18px;height:18px;stroke:rgba(255,255,255,0.6);fill:none;stroke-width:2;transition:all .2s}
+        .sidebar-menu a:hover{background:rgba(249,115,22,0.2);color:#ffffff}
+        .sidebar-menu a:hover svg{stroke:#f97316}
+        .sidebar-menu a.active{background:#f97316;color:#ffffff;font-weight:500}
+        .sidebar-menu a.active svg{stroke:#ffffff}
+        .sidebar-footer{border-top:1px solid rgba(255,255,255,0.1);padding-top:0.75rem;margin-top:auto}
+        .footer-links{display:grid;gap:0.4rem;margin-bottom:0.6rem}
+        .footer-link{display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.7);text-decoration:none;padding:0.35rem 0.5rem;border-radius:0.5rem;font-size:0.75rem;transition:all .2s}
+        .footer-link:hover{background:rgba(249,115,22,0.2);color:#ffffff}
+        .footer-link svg{width:16px;height:16px;stroke:rgba(255,255,255,0.6)}
+        .logout-btn{width:100%;padding:0.6rem 0.8rem;background:#f97316;color:#fff;border:none;border-radius:0.5rem;font-size:0.8rem;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:0.4rem;justify-content:center;text-decoration:none}
+        .logout-btn:hover{background:#ea580c}
+        .main-content{margin-left:240px;flex:1;display:flex;flex-direction:column}
+        .topbar{background:#ffffff;border-bottom:1px solid var(--border-color);padding:0.9rem 1.2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;box-shadow:var(--shadow)}
+        .topbar h2{font-size:0.95rem;font-weight:700;color:var(--text-primary)}
+        .content{padding:1rem;flex:1;overflow-y:auto;width:100%}
         .card{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:1rem;padding:1.1rem;box-shadow:var(--shadow);margin-bottom:1rem}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem}
-        .stat-card{background:#fff;border:1px solid var(--border-color);border-radius:1rem;padding:1rem;box-shadow:var(--shadow)}
-        .stat-value{font-size:1.6rem;font-weight:700;color:var(--primary-color);margin-bottom:.25rem}
-        .stat-label{color:var(--text-secondary);font-size:.85rem}
-        .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;border:1px solid var(--border-color);color:#334155;background:#f8fafc}
-        .badge{display:inline-block;padding:.2rem .55rem;border-radius:999px;font-size:.7rem;font-weight:600;border:1px solid var(--border-color)}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.8rem;margin-bottom:1rem}
+        .stat-card{background:#fff;border:1px solid var(--border-color);border-radius:0.75rem;padding:0.9rem;box-shadow:var(--shadow);border-top:3px solid #f97316}
+        .stat-value{font-size:1.4rem;font-weight:700;color:#f97316;margin-bottom:0.2rem}
+        .stat-label{color:var(--text-secondary);font-size:0.75rem}
+        .chip{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.5rem;border-radius:999px;font-size:0.7rem;border:1px solid var(--border-color);color:#334155;background:#f8fafc}
+        .badge{display:inline-block;padding:0.2rem 0.5rem;border-radius:999px;font-size:0.65rem;font-weight:600;background:#fed7aa;color:#01172a}
         .badge-low{background:#ecfeff;color:#155e75}
         .badge-medium{background:#eff6ff;color:#1e3a8a}
         .badge-high{background:#fef2f2;color:#991b1b}
-        .table{width:100%;border-collapse:collapse;font-size:.875rem}
-        .table th,.table td{padding:.75rem;border-bottom:1px solid #f3f4f6;text-align:left}
-        .table thead{background:#f9fafb;border-bottom:2px solid var(--border-color)}
+        .table{width:100%;border-collapse:collapse;font-size:0.8rem}
+        .table th,.table td{padding:0.6rem;border-bottom:1px solid #f3f4f6;text-align:left}
+        .table thead{background:linear-gradient(135deg,#01172a 0%,#1f2937 100%);color:#ffffff;border-bottom:2px solid #f97316;font-weight:600;font-size:0.75rem}
     </style>";
     echo '</head><body>';
 
@@ -105,7 +108,125 @@ function studentLayoutStart(string $active, string $title) {
 }
 
 function studentLayoutEnd() {
+    global $SHOW_JOIN_BUTTON;
+    $showJoinButton = $SHOW_JOIN_BUTTON ?? true;
+    
     echo '</div></div>';
+    
+    // Floating Join Button - Outside content div so fixed positioning works
+    echo '
+    <style>
+        .fab-join {
+            position: fixed !important;
+            right: 24px !important;
+            bottom: 24px !important;
+            width: 56px !important;
+            height: 56px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            background: #f97316 !important;
+            color: #fff !important;
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35) !important;
+            cursor: pointer !important;
+            transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease !important;
+            z-index: 9999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            visibility: visible !important;
+        }
+        .fab-join:hover { background: #ea580c !important; transform: translateY(-2px) !important; box-shadow: 0 12px 28px rgba(234, 88, 12, 0.4) !important; }
+        .fab-join:active { transform: translateY(0) !important; }
+
+        .join-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+        }
+        .join-modal {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+            transform: translateY(8px);
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        .join-modal.show { transform: translateY(0); opacity: 1; }
+        .join-modal-header { padding: 1rem 1.25rem; border-bottom: 2px solid #f97316; display: flex; justify-content: space-between; align-items: center; }
+        .join-modal-title { margin: 0; font-size: 1rem; font-weight: 700; color: #01172a; }
+        .join-close { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: #6b7280; }
+        .join-modal-body { padding: 1.25rem; }
+        .join-input { width: 100%; padding: 0.875rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; outline: none; }
+        .join-input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.15); }
+        .join-help { font-size: 0.8125rem; color: #6b7280; margin-top: 0.5rem; }
+        .join-actions { display: flex; gap: 0.5rem; justify-content: flex-end; padding: 0 1.25rem 1.25rem; }
+        .btn-secondary { background: #f1f5f9; color: #374151; }
+        .btn-secondary:hover { background: #e5e7eb; }
+        .btn-primary { background: #f97316; color: #fff; }
+        .btn-primary:hover { background: #ea580c; }
+    </style>
+
+    <button type="button" class="fab-join" id="openJoinModal" aria-label="Join course"' . ($showJoinButton ? '' : ' style="display:none"') . '>+</button>
+
+    <div class="join-modal-backdrop" id="joinModalBackdrop" aria-hidden="true">
+        <div class="join-modal" id="joinModal">
+            <div class="join-modal-header">
+                <h3 class="join-modal-title">Join Course with Code</h3>
+                <button type="button" class="join-close" id="closeJoinModal" aria-label="Close">×</button>
+            </div>
+            <form method="POST">
+                <div class="join-modal-body">
+                    <label style="display:block; font-size: 0.875rem; color:#374151; margin-bottom:0.5rem; font-weight:600;">Course Code</label>
+                    <input class="join-input" type="text" name="join_code" id="joinCodeInput" placeholder="e.g., ABC123" maxlength="10" required>
+                    <div class="join-help">Ask your instructor for the join code.</div>
+                </div>
+                <div class="join-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelJoin">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="join_by_code" value="1">Join</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        const fab = document.getElementById("openJoinModal");
+        const backdrop = document.getElementById("joinModalBackdrop");
+        const modal = document.getElementById("joinModal");
+        const closeBtn = document.getElementById("closeJoinModal");
+        const cancelBtn = document.getElementById("cancelJoin");
+        const codeInput = document.getElementById("joinCodeInput");
+
+        function openModal(){
+            backdrop.style.display = "flex";
+            requestAnimationFrame(() => modal.classList.add("show"));
+            setTimeout(() => codeInput && codeInput.focus(), 150);
+        }
+        function closeModal(){
+            modal.classList.remove("show");
+            setTimeout(() => { backdrop.style.display = "none"; }, 150);
+        }
+        function clickOutside(e){ if(e.target === backdrop) closeModal(); }
+
+        if (fab) fab.addEventListener("click", openModal);
+        if (closeBtn) closeBtn.addEventListener("click", closeModal);
+        if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+        if (backdrop) backdrop.addEventListener("click", clickOutside);
+        if (codeInput) codeInput.addEventListener("input", () => { codeInput.value = codeInput.value.toUpperCase(); });
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape" && backdrop.style.display === "flex") closeModal(); });
+    })();
+    </script>
+    ';
+    
     echo "<script>\n"
         . "(function(){\n"
         . "  if(typeof window.__lmsSessionId==='undefined'){\n"

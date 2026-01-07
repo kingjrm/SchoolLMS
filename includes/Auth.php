@@ -33,7 +33,7 @@ class Auth {
     public function login($username_or_email, $password) {
         global $pdo;
         try {
-            $query = "SELECT id, username, email, password, role, status, first_name, last_name 
+            $query = "SELECT id, username, email, password, role, status, first_name, last_name, is_verified 
                      FROM users WHERE username = ? OR email = ? LIMIT 1";
             
             $stmt = $pdo->prepare($query);
@@ -46,6 +46,12 @@ class Auth {
 
             if ($result['status'] !== 'active') {
                 return ['success' => false, 'message' => 'Account is inactive'];
+            }
+
+            // Block login if email not verified
+            if ((int)$result['is_verified'] !== 1) {
+                $_SESSION['pending_verify_email'] = $result['email'];
+                return ['success' => false, 'message' => 'Your email is not verified yet. Please check your inbox or verify now.'];
             }
 
             if (!password_verify($password, $result['password'])) {
@@ -106,14 +112,33 @@ class Auth {
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-            // Insert user
-            $insertQuery = "INSERT INTO users (username, email, password, first_name, last_name, role, status, created_at, updated_at) 
-                           VALUES (?, ?, ?, ?, ?, 'student', 'active', NOW(), NOW())";
+            // Insert user with is_verified = 0
+            $insertQuery = "INSERT INTO users (username, email, password, first_name, last_name, role, status, is_verified, created_at, updated_at) 
+                           VALUES (?, ?, ?, ?, ?, 'student', 'inactive', 0, NOW(), NOW())";
             
             $stmt = $pdo->prepare($insertQuery);
             $stmt->execute([$username, $email, $hashedPassword, $first_name, $last_name]);
 
-            return ['success' => true, 'message' => 'Registration successful. Please login.'];
+            // Create OTP and send email
+            require_once __DIR__ . '/OTP.php';
+            require_once __DIR__ . '/Mailer.php';
+            $otp = otp_create($email, 'register', 10);
+
+                $mailer = new Mailer();
+            $subject = 'Verify your email - School LMS';
+            $html = '<p>Hello ' . htmlspecialchars($first_name) . ',</p>' .
+                    '<p>Your verification code is:</p>' .
+                    '<div style="font-size:24px;font-weight:bold;letter-spacing:4px;color:#ff6b35;">' . htmlspecialchars($otp['code']) . '</div>' .
+                    '<p>This code will expire at ' . htmlspecialchars($otp['expires_at']) . ' (UTC).</p>' .
+                    '<p>If you did not request this, please ignore this email.</p>';
+                $sent = $mailer->send($email, $first_name . ' ' . $last_name, $subject, $html);
+                // Log outcome for troubleshooting
+                $logDir = __DIR__ . '/../logs';
+                if (!is_dir($logDir)) { @mkdir($logDir, 0755, true); }
+                $line = date('c') . " | register | $email | SEND " . ($sent ? 'OK' : ('FAILED: ' . $mailer->getLastError())) . "\n";
+                @file_put_contents($logDir . '/logs_otp.txt', $line, FILE_APPEND);
+
+            return ['success' => true, 'message' => 'Registration successful. We sent a verification code to your email.', 'email' => $email];
         } catch (Exception $e) {
             return ['success' => false, 'message' => 'Registration error: ' . $e->getMessage()];
         }

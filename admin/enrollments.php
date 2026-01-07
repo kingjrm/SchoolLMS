@@ -1,211 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrollments - School LMS</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <?php
-    require_once '../includes/config.php';
-    require_once '../includes/Auth.php';
-    require_once '../includes/Database.php';
-    require_once '../includes/helpers.php';
+<?php
+require_once '../includes/config.php';
+require_once '../includes/Auth.php';
+require_once '../includes/admin_layout.php';
 
-    Auth::requireRole('admin');
-    $user = Auth::getCurrentUser();
-    $db = new Database();
+Auth::requireRole('admin');
 
-    $message = '';
-    $action = $_GET['action'] ?? 'list';
+adminLayoutStart('enrollments', 'Enrollment Management');
+?>
 
-    // Handle enroll
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-        $student_id = (int)($_POST['student_id'] ?? 0);
-        $course_id = (int)($_POST['course_id'] ?? 0);
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div class="card">
+            <div style="padding: 1.25rem; border-bottom: 1px solid #e5e7eb;">
+                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 700; display:flex; align-items:center; gap:.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h12"/><path d="M9 12h12"/><path d="M9 19h12"/><path d="M5 5h.01"/><path d="M5 12h.01"/><path d="M5 19h.01"/></svg>
+                    Student Enrollments by Course & Section
+                </h3>
+            </div>
+            <div style="padding: 1.5rem;">
+                <?php
+                try {
+                    $stmt = $pdo->prepare("
+                        SELECT c.id, c.code, c.title, t.name as term_name, u.first_name, u.last_name,
+                        (SELECT COUNT(DISTINCT e.student_id) FROM enrollments e WHERE e.course_id = c.id AND e.status = 'enrolled') as total_enrolled,
+                        (SELECT COUNT(DISTINCT cs.id) FROM course_sections cs WHERE cs.course_id = c.id AND cs.status = 'active') as total_sections
+                        FROM courses c
+                        JOIN academic_terms t ON c.term_id = t.id
+                        JOIN users u ON c.teacher_id = u.id
+                        WHERE c.status = 'active' AND t.is_active = TRUE
+                        ORDER BY t.name DESC, c.code ASC
+                    ");
+                    $stmt->execute();
+                    $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {
+                    $courses = [];
+                }
 
-        if ($student_id === 0 || $course_id === 0) {
-            $message = 'Please select both student and course';
-        } else {
-            // Check if already enrolled
-            $db->prepare("SELECT id FROM enrollments WHERE student_id = ? AND course_id = ?")->bind('ii', $student_id, $course_id)->execute();
-            if ($db->getResult()->num_rows > 0) {
-                $message = 'Student is already enrolled in this course';
-            } else {
-                $query = "INSERT INTO enrollments (course_id, student_id, enrollment_date, status) VALUES (?, ?, CURDATE(), 'enrolled')";
-                $db->prepare($query)
-                    ->bind('ii', $course_id, $student_id)
-                    ->execute();
-                $message = 'Enrollment created successfully';
-                $action = 'list';
-            }
-        }
-    }
-
-    // Handle drop
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
-        $delete_id = (int)$_POST['delete_id'];
-        $db->prepare("UPDATE enrollments SET status = 'dropped' WHERE id = ?")->bind('i', $delete_id)->execute();
-        $message = 'Student dropped successfully';
-    }
-    ?>
-
-    <div class="main-layout">
-        <aside class="sidebar">
-            <h1>School LMS</h1>
-            <nav class="nav-menu">
-                <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-                <li class="nav-item"><a href="users.php" class="nav-link">Users</a></li>
-                <li class="nav-item"><a href="courses.php" class="nav-link">Courses</a></li>
-                <li class="nav-item"><a href="terms.php" class="nav-link">Academic Terms</a></li>
-                <li class="nav-item"><a href="enrollments.php" class="nav-link active">Enrollments</a></li>
-                <li class="nav-item"><a href="reports.php" class="nav-link">Reports</a></li>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <div class="topbar">
-                <h1>Enrollments Management</h1>
-                <div class="user-info">
-                    <span><?php echo htmlspecialchars($user['full_name']); ?></span>
-                    <div class="user-menu">
-                        <button class="user-btn" onclick="toggleDropdown()">Menu</button>
-                        <div class="dropdown-menu" id="dropdown">
-                            <a href="../logout.php" class="dropdown-item">Logout</a>
+                if (!empty($courses)):
+                    foreach ($courses as $course):
+                ?>
+                    <div style="margin-bottom: 2rem; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1rem; background: #fafbfc;">
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <h4 style="font-size: 0.95rem; font-weight: 700; margin: 0 0 0.25rem 0;">
+                                    <?php echo htmlspecialchars($course['code']); ?> - <?php echo htmlspecialchars($course['title']); ?>
+                                </h4>
+                                <p style="margin: 0; font-size: 0.85rem; color: #6b7280;">
+                                    Instructor: <?php echo htmlspecialchars($course['first_name'] . ' ' . $course['last_name']); ?> | 
+                                    Term: <?php echo htmlspecialchars($course['term_name']); ?>
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6;">
+                                    <?php echo $course['total_enrolled']; ?>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #6b7280;">
+                                    Enrolled students
+                                </div>
+                            </div>
                         </div>
+
+                        <?php if ($course['total_sections'] > 0): ?>
+                            <table class="table" style="margin: 0;">
+                                <thead>
+                                    <tr>
+                                        <th>Section</th>
+                                        <th>Capacity</th>
+                                        <th>Enrolled</th>
+                                        <th>Available</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $stmt = $pdo->prepare("
+                                        SELECT id, section_code, max_students, current_students
+                                        FROM course_sections
+                                        WHERE course_id = ? AND status = 'active'
+                                        ORDER BY section_code
+                                    ");
+                                    $stmt->execute([$course['id']]);
+                                    $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    
+                                    foreach ($sections as $section):
+                                        $available = $section['max_students'] - $section['current_students'];
+                                        $capacity_percent = ($section['current_students'] / $section['max_students']) * 100;
+                                    ?>
+                                    <tr>
+                                        <td style="font-weight: 600;">
+                                            <?php echo htmlspecialchars($section['section_code']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $section['max_students']; ?>
+                                        </td>
+                                        <td>
+                                            <div style="position: relative; height: 20px; background: #e5e7eb; border-radius: 0.25rem; overflow: hidden;">
+                                                <div style="position: absolute; height: 100%; background: #3b82f6; width: <?php echo $capacity_percent; ?>%; top: 0; left: 0;"></div>
+                                                <div style="position: absolute; height: 100%; display: flex; align-items: center; justify-content: center; width: 100%; font-size: 0.75rem; font-weight: 600; color: #1f2937;">
+                                                    <?php echo $section['current_students']; ?>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span style="display: inline-block; padding: 0.25rem 0.75rem; background: 
+                                                <?php echo $available > 0 ? '#ecfdf5;' : '#fef2f2;'; ?>
+                                                ; color: 
+                                                <?php echo $available > 0 ? '#065f46;' : '#991b1b;'; ?>
+                                                ; border-radius: 0.25rem; font-size: 0.8rem; font-weight: 600;">
+                                                <?php echo $available; ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endif; ?>
                     </div>
-                </div>
+                    <?php endforeach;
+                else:
+                ?>
+                    <p style="text-align: center; color: #9ca3af; padding: 2rem;">No active courses found</p>
+                <?php endif; ?>
             </div>
-
-            <?php if ($message): ?>
-                <?php echo showAlert(strpos($message, 'Error') === false ? 'success' : 'error', $message); ?>
-            <?php endif; ?>
-
-            <?php if ($action === 'list'): ?>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Active Enrollments</h3>
-                    <a href="enrollments.php?action=add" class="btn btn-primary btn-sm">Add Enrollment</a>
-                </div>
-                <div class="card-body">
-                    <?php
-                    $db->prepare("
-                        SELECT e.*, u.first_name, u.last_name, c.title, c.code 
-                        FROM enrollments e 
-                        JOIN users u ON e.student_id = u.id 
-                        JOIN courses c ON e.course_id = c.id 
-                        WHERE e.status = 'enrolled'
-                        ORDER BY e.enrollment_date DESC
-                    ")->execute();
-                    $enrollments = $db->fetchAll();
-                    ?>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Course</th>
-                                <th>Code</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($enrollments as $enrollment): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($enrollment['first_name'] . ' ' . $enrollment['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($enrollment['title']); ?></td>
-                                <td><?php echo htmlspecialchars($enrollment['code']); ?></td>
-                                <td><?php echo formatDate($enrollment['enrollment_date'], 'Y-m-d'); ?></td>
-                                <td>
-                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Drop this student?');">
-                                        <input type="hidden" name="delete_id" value="<?php echo $enrollment['id']; ?>">
-                                        <button type="submit" class="btn btn-danger btn-sm">Drop</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-
-                    <?php if (empty($enrollments)): ?>
-                        <p style="text-align: center; color: #9ca3af;">No active enrollments</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <?php else: ?>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Add New Enrollment</h3>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        <div class="form-group">
-                            <label for="student_id">Student</label>
-                            <select id="student_id" name="student_id" required>
-                                <option value="">Select Student</option>
-                                <?php
-                                $db->prepare("SELECT id, first_name, last_name FROM users WHERE role = 'student' AND status = 'active' ORDER BY first_name")->execute();
-                                $students = $db->fetchAll();
-                                foreach ($students as $s):
-                                ?>
-                                    <option value="<?php echo $s['id']; ?>">
-                                        <?php echo htmlspecialchars($s['first_name'] . ' ' . $s['last_name']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="course_id">Course</label>
-                            <select id="course_id" name="course_id" required>
-                                <option value="">Select Course</option>
-                                <?php
-                                $db->prepare("
-                                    SELECT c.id, c.code, c.title, u.first_name, u.last_name 
-                                    FROM courses c 
-                                    JOIN users u ON c.teacher_id = u.id 
-                                    WHERE c.status = 'active' 
-                                    ORDER BY c.title
-                                ")->execute();
-                                $courses = $db->fetchAll();
-                                foreach ($courses as $c):
-                                ?>
-                                    <option value="<?php echo $c['id']; ?>">
-                                        <?php echo htmlspecialchars($c['code'] . ' - ' . $c['title']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="btn-group">
-                            <button type="submit" name="submit" class="btn btn-primary">Enroll</button>
-                            <a href="enrollments.php" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <?php endif; ?>
-        </main>
+        </div>
     </div>
 
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('active');
-        }
-
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('dropdown');
-            const userMenu = document.querySelector('.user-menu');
-            if (!userMenu.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-    </script>
-</body>
-</html>
+<?php adminLayoutEnd(); ?>

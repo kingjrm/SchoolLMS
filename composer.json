@@ -1,0 +1,12 @@
+{
+    "name": "school/lms",
+    "description": "School Learning Management System",
+    "require": {
+        "phpmailer/phpmailer": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "School\\": "src/"
+        }
+    }
+}

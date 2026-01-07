@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignments - School LMS</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <?php
-    require_once '../includes/config.php';
-    require_once '../includes/Auth.php';
-    require_once '../includes/Database.php';
-    require_once '../includes/helpers.php';
+<?php
+require_once '../includes/config.php';
+require_once '../includes/Auth.php';
+require_once '../includes/Database.php';
+require_once '../includes/helpers.php';
+require_once '../includes/student_layout.php';
 
-    Auth::requireRole('student');
-    $user = Auth::getCurrentUser();
-    $db = new Database();
-    $student_id = $user['id'];
+Auth::requireRole('student');
+$user = Auth::getCurrentUser();
+$db = new Database();
+$student_id = $user['id'];
 
-    $message = '';
+$message = '';
 
     // Handle submit assignment
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_assignment'])) {
@@ -56,33 +48,8 @@
             }
         }
     }
-    ?>
-
-    <div class="main-layout">
-        <aside class="sidebar">
-            <h1>School LMS</h1>
-            <nav class="nav-menu">
-                <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-                <li class="nav-item"><a href="courses.php" class="nav-link">Courses</a></li>
-                <li class="nav-item"><a href="assignments.php" class="nav-link active">Assignments</a></li>
-                <li class="nav-item"><a href="grades.php" class="nav-link">Grades</a></li>
-                <li class="nav-item"><a href="announcements.php" class="nav-link">Announcements</a></li>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <div class="topbar">
-                <h1>Assignments</h1>
-                <div class="user-info">
-                    <span><?php echo htmlspecialchars($user['full_name']); ?></span>
-                    <div class="user-menu">
-                        <button class="user-btn" onclick="toggleDropdown()">Menu</button>
-                        <div class="dropdown-menu" id="dropdown">
-                            <a href="../logout.php" class="dropdown-item">Logout</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+?>
+<?php studentLayoutStart('assignments', 'Assignments'); ?>
 
             <?php if ($message): ?>
                 <?php echo showAlert(strpos($message, 'Error') === false ? 'success' : 'error', $message); ?>
@@ -180,21 +147,4 @@
                     <?php endif; ?>
                 </div>
             </div>
-        </main>
-    </div>
-
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('active');
-        }
-
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('dropdown');
-            const userMenu = document.querySelector('.user-menu');
-            if (!userMenu.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-    </script>
-</body>
-</html>
+<?php studentLayoutEnd(); ?>

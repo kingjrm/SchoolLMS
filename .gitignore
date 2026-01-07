@@ -1,0 +1,9 @@
+.env
+.DS_Store
+*.log
+logs/
+vendor/
+node_modules/
+composer.lock
+.vscode/
+.idea/

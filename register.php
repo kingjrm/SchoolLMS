@@ -7,6 +7,8 @@ require_once 'includes/helpers.php';
 $error = '';
 $success = '';
 
+// Email OTP will be generated during registration
+
 if (Auth::isLoggedIn()) {
     header('Location: student/dashboard.php', true, 302);
     exit;
@@ -29,9 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $auth = new Auth();
         $result = $auth->register($username, $email, $password, $confirm_password, $first_name, $last_name);
-        
+
         if ($result['success']) {
-            $success = $result['message'];
+            // Store pending email for verification flow
+            if (!empty($result['email'])) {
+                $_SESSION['pending_verify_email'] = $result['email'];
+            }
+            $_SESSION['flash_success'] = 'Account created. We sent a verification code to your email.';
+            header('Location: verify-otp.php', true, 302);
+            exit;
         } else {
             $error = $result['message'];
         }
@@ -93,77 +101,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Navigation */
         nav {
             background-color: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 1.25rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: var(--shadow);
         }
 
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .nav-brand svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-        }
-
-        .nav-menu a {
+            font-weight: 700;
+            font-size: 1.5rem;
             color: var(--text-primary);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            cursor: pointer;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
+        .nav-brand span {
             color: var(--primary-color);
         }
 
-        .nav-controls {
+        .nav-center {
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            gap: 2.5rem;
+            list-style: none;
         }
 
-        .theme-toggle {
-            background: none;
+        .nav-center a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-center a:hover, .nav-center a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-center a:hover::after, .nav-center a.active::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
             border: none;
             cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 2;
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
         }
 
         /* Main Container */
@@ -175,13 +200,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 1rem 1.5rem;
             align-items: center;
         }
 
         /* Left Side - Benefits */
         .register-info {
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .info-header h1 {
@@ -241,11 +266,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* Right Side - Form */
         .register-form-section {
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .form-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .form-header h2 {
@@ -391,20 +416,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @media (max-width: 768px) {
-            nav {
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;
-                gap: 1rem;
-                width: 100%;
-                order: 3;
+            .nav-center {
+                display: none;
             }
 
             .register-form-section {
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
             .form-header h2 {
@@ -420,69 +437,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-brand">
-            <svg viewBox="0 0 24 24">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            </svg>
-            School LMS
-        </div>
-        <ul class="nav-menu">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="index.php#features">Features</a></li>
-            <li><a href="about.php">About</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="login.php">Sign In</a></li>
-        </ul>
-        <div class="nav-controls">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <svg id="sunIcon" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <svg id="moonIcon" viewBox="0 0 24 24" style="display: none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
+        <div class="container">
+            <a href="index.php" class="nav-brand">School<span>SKILLS</span></a>
+            <ul class="nav-center">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="courses.php">Courses</a></li>
+                <li><a href="instructors.php">Instructors</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="login.php" class="btn-primary">Sign In</a>
+            </div>
         </div>
     </nav>
 
-    <?php
-    session_start();
-    require_once 'includes/config.php';
-    require_once 'includes/Auth.php';
-    require_once 'includes/helpers.php';
-
-    $error = '';
-    $success = '';
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $username = sanitize($_POST['username'] ?? '');
-        $email = sanitize($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $confirm_password = $_POST['confirm_password'] ?? '';
-        $first_name = sanitize($_POST['first_name'] ?? '');
-        $last_name = sanitize($_POST['last_name'] ?? '');
-
-        $auth = new Auth();
-        $result = $auth->register($username, $email, $password, $confirm_password, $first_name, $last_name);
-
-        if ($result['success']) {
-            $success = $result['message'];
-            header('Location: login.php?registered=1', true, 302);
-            exit;
-        } else {
-            $error = $result['message'];
-        }
-    }
-    ?>
+    
 
     <!-- Main Content -->
     <div class="register-container">
@@ -590,35 +559,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
-        const html = document.documentElement;
-
-        // Check for saved theme preference or system preference
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-
-        if (initialTheme === 'dark') {
-            html.classList.add('dark-mode');
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const isDarkMode = html.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            
-            if (isDarkMode) {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            } else {
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>

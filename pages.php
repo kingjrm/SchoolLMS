@@ -126,20 +126,23 @@ session_start();
 
         /* Header Section */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            padding: 4rem 0;
-            text-align: center;
-            color: white;
+            background: var(--bg-primary);
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .page-header h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
         .page-header p {
-            font-size: 1.25rem;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0;
+            line-height: 1.6;
         }
 
         /* Pages Section */
@@ -226,7 +229,6 @@ session_start();
             <ul class="nav-center">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="courses.php">Courses</a></li>
-                <li><a href="pages.php" class="active">Pages</a></li>
                 <li><a href="instructors.php">Instructors</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>

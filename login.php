@@ -18,6 +18,14 @@ if (Auth::isLoggedIn()) {
     exit;
 }
 
+// Show success message after registration
+if (isset($_SESSION['flash_success'])) {
+    $success = $_SESSION['flash_success'];
+    unset($_SESSION['flash_success']);
+} elseif (isset($_GET['registered'])) {
+    $success = 'Your account has been created. Please sign in.';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username_or_email = sanitize($_POST['username_or_email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -39,6 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             $error = $result['message'];
+            if (strpos(strtolower($error), 'not verified') !== false && empty($_SESSION['pending_verify_email'])) {
+                if (filter_var($username_or_email, FILTER_VALIDATE_EMAIL)) {
+                    $_SESSION['pending_verify_email'] = $username_or_email;
+                }
+            }
         }
     }
 }
@@ -98,77 +111,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Navigation */
         nav {
             background-color: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 1.25rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: var(--shadow);
         }
 
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .nav-brand svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-        }
-
-        .nav-menu a {
+            font-weight: 700;
+            font-size: 1.5rem;
             color: var(--text-primary);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            cursor: pointer;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
+        .nav-brand span {
             color: var(--primary-color);
         }
 
-        .nav-controls {
+        .nav-center {
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            gap: 2.5rem;
+            list-style: none;
         }
 
-        .theme-toggle {
-            background: none;
+        .nav-center a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-center a:hover, .nav-center a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-center a:hover::after, .nav-center a.active::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
             border: none;
             cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 2;
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
         }
 
         /* Main Container */
@@ -471,16 +501,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @media (max-width: 768px) {
-            nav {
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;
-                gap: 1rem;
-                width: 100%;
-                order: 3;
+            .nav-center {
+                display: none;
             }
 
             .login-form-section {
@@ -496,37 +518,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-brand">
-            <svg viewBox="0 0 24 24">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            </svg>
-            School LMS
-        </div>
-        <ul class="nav-menu">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="index.php#features">Features</a></li>
-            <li><a href="about.php">About</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="register.php">Sign Up</a></li>
-        </ul>
-        <div class="nav-controls">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <svg id="sunIcon" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <svg id="moonIcon" viewBox="0 0 24 24" style="display: none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
+        <div class="container">
+            <a href="index.php" class="nav-brand">School<span>SKILLS</span></a>
+            <ul class="nav-center">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="courses.php">Courses</a></li>
+                <li><a href="instructors.php">Instructors</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="register.php" class="btn-primary">Sign Up</a>
+            </div>
         </div>
     </nav>
 
@@ -547,6 +549,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1>Login</h1>
                 <p>Sign in to your account</p>
             </div>
+
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
+            <?php endif; ?>
 
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
@@ -569,6 +575,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <button type="submit" class="btn-signin">Sign In</button>
             </form>
+
+            <?php if ($error && isset($_SESSION['pending_verify_email']) && $_SESSION['pending_verify_email']): ?>
+                <div class="alert alert-info" style="background-color: rgba(59,130,246,0.1); border-left: 4px solid #3b82f6; color: #1d4ed8; margin-top:12px;">
+                    <p class="font-medium">Your email is not verified yet.</p>
+                    <div style="margin-top:8px; display:flex; gap:12px; align-items:center; flex-wrap: wrap;">
+                        <input type="hidden" id="pending-email" value="<?php echo htmlspecialchars($_SESSION['pending_verify_email']); ?>" />
+                        <a href="verify-otp.php" style="color:#1d4ed8; text-decoration:underline;">Verify now</a>
+                        <a href="#" onclick="resendFromLogin(event)" style="color:#1d4ed8; text-decoration:underline;">Resend code</a>
+                    </div>
+                    <span id="resend-note" style="font-size:12px; color:#047857; font-weight: 600; display: none; margin-top: 8px;"></span>
+                </div>
+            <?php endif; ?>
 
             <div class="divider">
                 <div class="divider-line"></div>
@@ -623,35 +641,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
-        const html = document.documentElement;
-
-        // Check for saved theme preference or system preference
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-
-        if (initialTheme === 'dark') {
-            html.classList.add('dark-mode');
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const isDarkMode = html.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            
-            if (isDarkMode) {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            } else {
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
+        async function resendFromLogin(e){
+            e.preventDefault();
+            const emailEl = document.getElementById('pending-email');
+            if(!emailEl){ return; }
+            const email = emailEl.value;
+            const note = document.getElementById('resend-note');
+            note.style.display = 'block';
+            note.style.color = '#3b82f6';
+            note.textContent = 'Sending...';
+            try{
+                const resp = await fetch('verify-otp.php?resend=1', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'email='+encodeURIComponent(email)});
+                const msg = await resp.text();
+                if (resp.status === 204) {
+                    note.style.color = '#047857';
+                    note.textContent = '✓ A new code has been sent to your email!';
+                } else if (resp.status === 429) {
+                    note.style.color = '#b91c1c';
+                    note.textContent = msg || 'Please wait before requesting another code.';
+                } else {
+                    note.style.color = '#b91c1c';
+                    note.textContent = msg || 'Failed to send. Please try again.';
+                }
+            }catch(err){ 
+                note.style.color = '#b91c1c';
+                note.textContent = 'Network error. Please try again.';
             }
-        });
+        }
     </script>
 </body>
 </html>

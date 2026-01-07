@@ -1,0 +1,14 @@
+# Deny access to .env file
+<FilesMatch "^\.env$">
+    Require all denied
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to hidden files and directories
+<FilesMatch "^\.|^\.">
+    Require all denied
+</FilesMatch>

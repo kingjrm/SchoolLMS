@@ -53,86 +53,80 @@
         /* Navigation */
         nav {
             background-color: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
+            padding: 1.25rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-primary);
             text-decoration: none;
         }
 
-        .nav-brand svg {
-            width: 28px;
-            height: 28px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
+        .nav-brand span {
+            color: var(--primary-color);
         }
 
         .nav-center {
             display: flex;
-            gap: 2rem;
-            align-items: center;
+            gap: 2.5rem;
             list-style: none;
         }
 
         .nav-center a {
-            color: var(--text-primary);
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
             transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
         }
 
         .nav-center a:hover, .nav-center a.active {
             color: var(--primary-color);
         }
 
+        .nav-center a:hover::after, .nav-center a.active::after {
+            width: 100%;
+        }
+
         .nav-right {
             display: flex;
+            align-items: center;
             gap: 1rem;
-            align-items: center;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 2;
         }
 
         .btn-primary {
-            background-color: var(--accent-color);
+            background-color: var(--primary-color);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 2rem;
             border: none;
             border-radius: 0.5rem;
             font-weight: 600;
@@ -140,42 +134,46 @@
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
         }
 
         .btn-primary:hover {
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
         }
 
         /* Page Header */
         .page-header {
             background-color: var(--bg-primary);
-            padding: 5rem 2rem 4rem;
-            text-align: center;
+            padding: 3rem 0;
             border-bottom: 1px solid var(--border-color);
         }
 
         .page-header h1 {
-            font-size: 2.75rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
 
         .page-header p {
-            font-size: 1.125rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.7;
+            max-width: 640px;
+            margin: 0;
+            line-height: 1.6;
         }
 
         /* Container */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 0 2rem;
+        }
+
+        .content-section {
+            padding: 4rem 0;
             background-color: var(--bg-secondary);
         }
 
@@ -257,11 +255,12 @@
             border: 1px solid var(--border-color);
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
+            padding: 1.75rem;
         }
 
         .contact-form h2 {
             font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -506,48 +505,31 @@
 <body>
     <!-- Navigation -->
     <nav>
-        <a href="index.php" class="nav-brand">
-            <svg viewBox="0 0 24 24">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            </svg>
-            School LMS
-        </a>
-        <ul class="nav-center">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="index.php#features">Features</a></li>
-            <li><a href="about.php">About</a></li>
-            <li><a href="contact.php" class="active">Contact</a></li>
-        </ul>
-        <div class="nav-right">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <svg id="sunIcon" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <svg id="moonIcon" viewBox="0 0 24 24" style="display: none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
-            <a href="login.php" class="btn-primary">Sign In</a>
+        <div class="container">
+            <a href="index.php" class="nav-brand">School<span>SKILLS</span></a>
+            <ul class="nav-center">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="courses.php">Courses</a></li>
+                <li><a href="instructors.php">Instructors</a></li>
+                <li><a href="contact.php" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="login.php" class="btn-primary">Get Started</a>
+            </div>
         </div>
     </nav>
 
     <!-- Page Header -->
-    <div class="page-header">
-        <h1>Get In Touch</h1>
-        <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
-    </div>
+    <section class="page-header">
+        <div class="container">
+            <h1>Get In Touch</h1>
+            <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </section>
 
     <!-- Main Content -->
-    <div class="container">
+    <div class="content-section">
+        <div class="container">
         <div class="contact-grid">
             <!-- Contact Information -->
             <div>
@@ -658,6 +640,7 @@
                 </svg>
             </div>
         </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -750,34 +733,6 @@
     </footer>
 
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
-        const html = document.documentElement;
-
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-
-        if (initialTheme === 'dark') {
-            html.classList.add('dark-mode');
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const isDarkMode = html.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            
-            if (isDarkMode) {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            } else {
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>

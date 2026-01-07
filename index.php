@@ -164,7 +164,7 @@ try {
         }
 
         nav .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
@@ -1065,13 +1065,12 @@ try {
         <!-- Navigation -->
         <nav>
             <div class="container">
-                <div class="nav-brand">
+                <a href="index.php" class="nav-brand">
                     School<span>SKILLS</span>
-                </div>
+                </a>
                 <ul class="nav-center">
                     <li><a href="index.php">Home</a></li>
                     <li><a href="courses.php">Courses</a></li>
-                    <li><a href="pages.php">Pages</a></li>
                     <li><a href="instructors.php">Instructors</a></li>
                     <li><a href="contact.php">Contact</a></li>
                 </ul>

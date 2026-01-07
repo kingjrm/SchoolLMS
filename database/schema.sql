@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(100) NOT NULL,
     role ENUM('admin', 'teacher', 'student') NOT NULL DEFAULT 'student',
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    is_verified TINYINT(1) NOT NULL DEFAULT 0,
     phone VARCHAR(20),
     profile_picture VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -21,6 +22,20 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_role (role),
     INDEX idx_status (status),
     INDEX idx_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Email OTPs Table
+CREATE TABLE IF NOT EXISTS email_otps (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    code VARCHAR(6) NOT NULL,
+    purpose VARCHAR(50) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_purpose (purpose),
+    INDEX idx_expires_at (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Academic Terms Table
@@ -45,6 +60,7 @@ CREATE TABLE IF NOT EXISTS courses (
     term_id INT NOT NULL,
     credits INT,
     max_students INT,
+    join_code VARCHAR(10) UNIQUE,
     status ENUM('active', 'archived') NOT NULL DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -52,6 +68,23 @@ CREATE TABLE IF NOT EXISTS courses (
     FOREIGN KEY (term_id) REFERENCES academic_terms(id) ON DELETE RESTRICT,
     INDEX idx_teacher (teacher_id),
     INDEX idx_term (term_id),
+    INDEX idx_status (status),
+    INDEX idx_join_code (join_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Course Sections Table
+CREATE TABLE IF NOT EXISTS course_sections (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    course_id INT NOT NULL,
+    section_code VARCHAR(50) NOT NULL,
+    max_students INT DEFAULT 30,
+    current_students INT DEFAULT 0,
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_section (course_id, section_code),
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_course (course_id),
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -59,6 +92,7 @@ CREATE TABLE IF NOT EXISTS courses (
 CREATE TABLE IF NOT EXISTS enrollments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     course_id INT NOT NULL,
+    section_id INT,
     student_id INT NOT NULL,
     enrollment_date DATE NOT NULL DEFAULT CURDATE(),
     status ENUM('enrolled', 'dropped', 'completed') NOT NULL DEFAULT 'enrolled',
@@ -66,8 +100,10 @@ CREATE TABLE IF NOT EXISTS enrollments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_enrollment (course_id, student_id),
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (section_id) REFERENCES course_sections(id) ON DELETE SET NULL,
     FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_student (student_id),
+    INDEX idx_section (section_id),
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -253,21 +289,21 @@ CREATE INDEX idx_enrollments_course_status ON enrollments(course_id, status);
 -- Sample Data Insert
 
 -- Insert Admin User
-INSERT INTO users (username, email, password, first_name, last_name, role, status)
-VALUES ('admin', 'admin@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'System', 'Administrator', 'admin', 'active');
+INSERT INTO users (username, email, password, first_name, last_name, role, status, is_verified)
+VALUES ('admin', 'admin@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'System', 'Administrator', 'admin', 'active', 1);
 
 -- Insert Sample Teachers
-INSERT INTO users (username, email, password, first_name, last_name, role, status)
+INSERT INTO users (username, email, password, first_name, last_name, role, status, is_verified)
 VALUES 
-('jsmith', 'jsmith@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'John', 'Smith', 'teacher', 'active'),
-('mdavis', 'mdavis@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Mary', 'Davis', 'teacher', 'active');
+('jsmith', 'jsmith@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'John', 'Smith', 'teacher', 'active', 1),
+('mdavis', 'mdavis@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Mary', 'Davis', 'teacher', 'active', 1);
 
 -- Insert Sample Students
-INSERT INTO users (username, email, password, first_name, last_name, role, status)
+INSERT INTO users (username, email, password, first_name, last_name, role, status, is_verified)
 VALUES 
-('astudent', 'astudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Alice', 'Johnson', 'student', 'active'),
-('bstudent', 'bstudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Bob', 'Wilson', 'student', 'active'),
-('cstudent', 'cstudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Charlie', 'Brown', 'student', 'active');
+('astudent', 'astudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Alice', 'Johnson', 'student', 'active', 1),
+('bstudent', 'bstudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Bob', 'Wilson', 'student', 'active', 1),
+('cstudent', 'cstudent@schoollms.com', '$2y$10$N9qo8uLOickgx2ZMRZoMye4c4PbL4F8vLXPvDqKzU1ztxVfJS8zR.', 'Charlie', 'Brown', 'student', 'active', 1);
 
 -- Insert Academic Terms
 INSERT INTO academic_terms (name, start_date, end_date, is_active)

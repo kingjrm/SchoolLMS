@@ -280,7 +280,6 @@ try {
             <ul class="nav-center">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="courses.php" class="active">Courses</a></li>
-                <li><a href="pages.php">Pages</a></li>
                 <li><a href="instructors.php">Instructors</a></li>
                 <li><a href="contact.php">Contact</a></li>
             </ul>

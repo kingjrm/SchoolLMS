@@ -560,6 +560,177 @@ textarea {
     }
 }
 
+/* Help Page Styles */
+.help-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.help-header {
+    margin-bottom: 2rem;
+}
+
+.help-header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.help-subtitle {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.help-guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.help-card {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    transition: all 0.2s;
+}
+
+.help-card:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+.help-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #111827;
+}
+
+.help-card-description {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.help-card-links {
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.help-card-links li {
+    padding: 0;
+}
+
+.help-card-links a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.help-card-links a:hover {
+    color: #2563eb;
+}
+
+.help-faq-section {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.help-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+.help-faq-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.help-faq-item {
+    padding-bottom: 1.5rem;
+}
+
+.help-faq-item:not(:last-child) {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.help-faq-question {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #111827;
+    font-size: 1rem;
+}
+
+.help-faq-answer {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.help-support-section {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    padding: 2rem;
+}
+
+.help-support-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1e40af;
+}
+
+.help-support-intro {
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.help-support-info {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.help-support-item {
+    color: #1e40af;
+    font-size: 0.95rem;
+}
+
+.help-support-item a {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.help-support-item a:hover {
+    color: #1e40af;
+}
+
+@media (max-width: 768px) {
+    .help-guides-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .help-faq-section {
+        padding: 1.5rem;
+    }
+
+    .help-support-section {
+        padding: 1.5rem;
+    }
+}
+
 @media (max-width: 480px) {
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.25rem; }
@@ -575,5 +746,18 @@ textarea {
 
     .form-group {
         margin-bottom: 1rem;
+    }
+
+    .help-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .help-card {
+        padding: 1rem;
+    }
+
+    .help-faq-section,
+    .help-support-section {
+        padding: 1rem;
     }
 }

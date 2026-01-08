@@ -209,7 +209,7 @@ teacherLayoutStart('announcements', 'Announcements');
                             <!-- Image Display -->
                             <?php if ($ann['image_path'] && file_exists('../' . $ann['image_path'])): ?>
                                 <div style="margin:0.75rem 0;">
-                                    <img src="<?php echo htmlspecialchars($ann['image_path']); ?>" alt="Announcement image" style="max-width:100%;max-height:300px;border-radius:0.4rem;">
+                                    <img src="<?php echo htmlspecialchars('../' . $ann['image_path']); ?>" alt="Announcement image" style="max-width:100%;max-height:300px;border-radius:0.4rem;">
                                 </div>
                             <?php endif; ?>
                             

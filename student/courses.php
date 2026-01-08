@@ -78,173 +78,183 @@ $filter_term = $_GET['term'] ?? '';
     <div class="courses-container">
         <?php if ($enroll_message): ?>
             <div class="alert alert-success" style="margin-bottom: 1.5rem;">
-                ✓ <?php echo htmlspecialchars($enroll_message); ?>
+                <?php echo htmlspecialchars($enroll_message); ?>
             </div>
         <?php endif; ?>
         
         <?php if ($enroll_error): ?>
             <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
-                ✗ <?php echo htmlspecialchars($enroll_error); ?>
+                <?php echo htmlspecialchars($enroll_error); ?>
             </div>
         <?php endif; ?>
 
-        <!-- Filter Section -->
-        <div class="card" style="margin-bottom: 2rem;">
-            <div class="card-header">
-                <h3 class="card-title">🔍 Filter Courses</h3>
-            </div>
-            <div class="card-body">
-                <form method="GET" class="filter-form">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label for="search">Search by Title or Code:</label>
-                            <input type="text" id="search" name="search" placeholder="Course title or code..." value="<?php echo htmlspecialchars($search); ?>">
-                        </div>
-                        <div class="filter-group">
-                            <label for="teacher">Filter by Instructor:</label>
-                            <select id="teacher" name="teacher">
-                                <option value="">All Instructors</option>
-                                <?php
-                                try {
-                                    $stmt = $pdo->prepare("
-                                        SELECT DISTINCT u.id, u.first_name, u.last_name
-                                        FROM enrollments e 
-                                        JOIN courses c ON e.course_id = c.id 
-                                        JOIN users u ON c.teacher_id = u.id 
-                                        WHERE e.student_id = ?
-                                        ORDER BY u.first_name, u.last_name
-                                    ");
-                                    $stmt->execute([$student_id]);
-                                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($teachers as $teacher):
-                                        $teacher_name = $teacher['first_name'] . ' ' . $teacher['last_name'];
-                                ?>
-                                        <option value="<?php echo $teacher['id']; ?>" <?php echo $filter_teacher == $teacher['id'] ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($teacher_name); ?>
-                                        </option>
-                                <?php endforeach; ?>
-                                <?php } catch (Exception $e) {} ?>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="term">Filter by Term:</label>
-                            <select id="term" name="term">
-                                <option value="">All Terms</option>
-                                <?php
-                                try {
-                                    $stmt = $pdo->prepare("
-                                        SELECT DISTINCT t.id, t.name
-                                        FROM enrollments e 
-                                        JOIN courses c ON e.course_id = c.id 
-                                        LEFT JOIN academic_terms t ON c.term_id = t.id 
-                                        WHERE e.student_id = ?
-                                        ORDER BY t.name DESC
-                                    ");
-                                    $stmt->execute([$student_id]);
-                                    $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($terms as $term):
-                                ?>
-                                        <option value="<?php echo $term['id']; ?>" <?php echo $filter_term == $term['id'] ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($term['name'] ?? 'Unassigned'); ?>
-                                        </option>
-                                <?php endforeach; ?>
-                                <?php } catch (Exception $e) {} ?>
-                            </select>
-                        </div>
-                        <div class="filter-actions">
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                            <a href="courses.php" class="btn btn-secondary">Reset</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Enrolled Courses Section -->
-        <div class="card" style="margin-bottom: 2rem;">
-            <div class="card-header">
-                <h3 class="card-title">📚 My Enrolled Courses</h3>
-            </div>
-            <div class="card-body">
+        <!-- Simple Filters -->
+        <form method="GET" class="filter-inline" style="margin-bottom: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+            <input type="text" name="search" placeholder="Search title or code" value="<?php echo htmlspecialchars($search); ?>" style="flex: 1 1 240px; padding: 0.55rem 0.75rem; border: 1.5px solid #e5e7eb; border-radius: 0.4rem; font-size: 0.85rem;">
+            <select name="teacher" style="flex: 1 1 180px; padding: 0.55rem 0.75rem; border: 1.5px solid #e5e7eb; border-radius: 0.4rem; font-size: 0.85rem;">
+                <option value="">All instructors</option>
                 <?php
                 try {
-                    // Build query with filters
-                    $where_conditions = ['e.student_id = ?'];
-                    $params = [$student_id];
-                    
-                    if (!empty($search)) {
-                        $where_conditions[] = "(c.title LIKE ? OR c.code LIKE ?)";
-                        $search_param = '%' . $search . '%';
-                        $params[] = $search_param;
-                        $params[] = $search_param;
-                    }
-                    
-                    if (!empty($filter_teacher)) {
-                        $where_conditions[] = "c.teacher_id = ?";
-                        $params[] = (int)$filter_teacher;
-                    }
-                    
-                    if (!empty($filter_term)) {
-                        $where_conditions[] = "c.term_id = ?";
-                        $params[] = (int)$filter_term;
-                    }
-                    
-                    $where_clause = "WHERE " . implode(" AND ", $where_conditions);
-                    
                     $stmt = $pdo->prepare("
-                        SELECT c.*, t.name as term_name, u.first_name, u.last_name,
-                        e.enrollment_date
+                        SELECT DISTINCT u.id, u.first_name, u.last_name
+                        FROM enrollments e 
+                        JOIN courses c ON e.course_id = c.id 
+                        JOIN users u ON c.teacher_id = u.id 
+                        WHERE e.student_id = ?
+                        ORDER BY u.first_name, u.last_name
+                    ");
+                    $stmt->execute([$student_id]);
+                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($teachers as $teacher):
+                        $teacher_name = $teacher['first_name'] . ' ' . $teacher['last_name'];
+                ?>
+                        <option value="<?php echo $teacher['id']; ?>" <?php echo $filter_teacher == $teacher['id'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($teacher_name); ?>
+                        </option>
+                <?php endforeach; ?>
+                <?php } catch (Exception $e) {} ?>
+            </select>
+            <select name="term" style="flex: 1 1 160px; padding: 0.55rem 0.75rem; border: 1.5px solid #e5e7eb; border-radius: 0.4rem; font-size: 0.85rem;">
+                <option value="">All terms</option>
+                <?php
+                try {
+                    $stmt = $pdo->prepare("
+                        SELECT DISTINCT t.id, t.name
                         FROM enrollments e 
                         JOIN courses c ON e.course_id = c.id 
                         LEFT JOIN academic_terms t ON c.term_id = t.id 
-                        JOIN users u ON c.teacher_id = u.id 
-                        $where_clause
-                        ORDER BY e.enrollment_date DESC
+                        WHERE e.student_id = ?
+                        ORDER BY t.name DESC
                     ");
-                    $stmt->execute($params);
-                    $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } catch (Exception $e) {
-                    $courses = [];
-                    echo '<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:0.5rem;padding:1rem;margin-bottom:1rem;color:#991b1b">';
-                    echo 'Error loading courses: ' . htmlspecialchars($e->getMessage());
-                    echo '</div>';
-                }
-
-                if (!empty($courses)):
+                    $stmt->execute([$student_id]);
+                    $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($terms as $term):
                 ?>
-                    <div class="courses-grid">
+                        <option value="<?php echo $term['id']; ?>" <?php echo $filter_term == $term['id'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($term['name'] ?? 'Unassigned'); ?>
+                        </option>
+                <?php endforeach; ?>
+                <?php } catch (Exception $e) {} ?>
+            </select>
+            <button type="submit" class="btn btn-primary" style="padding: 0.55rem 0.9rem;">Filter</button>
+            <a href="courses.php" class="btn btn-secondary" style="padding: 0.55rem 0.9rem;">Reset</a>
+        </form>
+
+        <?php
+        try {
+            // Build query with filters
+            $where_conditions = ['e.student_id = ?'];
+            $params = [$student_id];
+            
+            if (!empty($search)) {
+                $where_conditions[] = "(c.title LIKE ? OR c.code LIKE ?)";
+                $search_param = '%' . $search . '%';
+                $params[] = $search_param;
+                $params[] = $search_param;
+            }
+            
+            if (!empty($filter_teacher)) {
+                $where_conditions[] = "c.teacher_id = ?";
+                $params[] = (int)$filter_teacher;
+            }
+            
+            if (!empty($filter_term)) {
+                $where_conditions[] = "c.term_id = ?";
+                $params[] = (int)$filter_term;
+            }
+            
+            $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+            
+            $stmt = $pdo->prepare("
+                SELECT c.*, t.name as term_name, u.first_name, u.last_name,
+                e.enrollment_date
+                FROM enrollments e 
+                JOIN courses c ON e.course_id = c.id 
+                LEFT JOIN academic_terms t ON c.term_id = t.id 
+                JOIN users u ON c.teacher_id = u.id 
+                $where_clause
+                ORDER BY e.enrollment_date DESC
+            ");
+            $stmt->execute($params);
+            $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            $courses = [];
+            echo '<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:0.5rem;padding:1rem;margin-bottom:1rem;color:#991b1b">';
+            echo 'Error loading courses: ' . htmlspecialchars($e->getMessage());
+            echo '</div>';
+        }
+
+        if (!empty($courses)):
+        ?>
+            <div class="table-wrap" style="overflow-x:auto;">
+                <table class="courses-table" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Code</th>
+                            <th>Instructor</th>
+                            <th>Term</th>
+                            <th>Credits</th>
+                            <th>Enrolled</th>
+                            <th style="text-align:center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php foreach ($courses as $course): ?>
-                        <div class="course-card">
-                            <div class="course-card-header">
-                                <div>
-                                    <h4 class="course-title"><?php echo htmlspecialchars($course['title']); ?></h4>
-                                    <p class="course-code"><?php echo htmlspecialchars($course['code']); ?></p>
-                                </div>
-                            </div>
-                            <div class="course-card-body">
-                                <p class="course-info"><strong>Instructor:</strong> <?php echo htmlspecialchars($course['first_name'] . ' ' . $course['last_name']); ?></p>
-                                <p class="course-info"><strong>Term:</strong> <?php echo htmlspecialchars($course['term_name'] ?? 'N/A'); ?></p>
-                                <p class="course-info"><strong>Credits:</strong> <?php echo $course['credits'] ?? 'N/A'; ?></p>
-                                <p class="course-info"><strong>Enrolled:</strong> <?php echo date('M d, Y', strtotime($course['enrollment_date'])); ?></p>
-                                
-                                <div class="course-actions">
-                                    <a href="assignments.php?course_id=<?php echo $course['id']; ?>" class="btn btn-primary">View Assignments</a>
-                                </div>
-                            </div>
-                        </div>
+                        <tr>
+                            <td><?php echo htmlspecialchars($course['title']); ?></td>
+                            <td><?php echo htmlspecialchars($course['code']); ?></td>
+                            <td><?php echo htmlspecialchars($course['first_name'] . ' ' . $course['last_name']); ?></td>
+                            <td><?php echo htmlspecialchars($course['term_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($course['credits'] ?? 'N/A'); ?></td>
+                            <td><?php echo date('M d, Y', strtotime($course['enrollment_date'])); ?></td>
+                            <td style="text-align:center;">
+                                <a href="assignments.php?teacher_id=<?php echo $course['teacher_id']; ?>" class="table-action" title="View assignments" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.35rem 0.6rem;border:1px solid #d1d5db;border-radius:0.375rem;color:#1f2937;text-decoration:none;">
+                                    <svg style="width:14px;height:14px;" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5L1.5 5l6.5 3.5L14.5 5 8 1.5zM1.5 11l6.5 3.5 6.5-3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <span style="font-size:0.82rem;font-weight:600;">Assignments</span>
+                                </a>
+                            </td>
+                        </tr>
                         <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <p class="no-data">You are not enrolled in any courses yet.</p>
-                <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
-        </div>
+        <?php else: ?>
+            <p class="no-data">You are not enrolled in any courses yet.</p>
+        <?php endif; ?>
     </div>
 
     <style>
         .courses-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .filter-inline input,
+        .filter-inline select {
+            background: #fff;
+        }
+
+        .courses-table th,
+        .courses-table td {
+            padding: 0.55rem 0.7rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.8rem;
+            text-align: left;
+            color: #1f2937;
+            white-space: nowrap;
+        }
+
+        .courses-table th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #6b7280;
+            background: #f9fafb;
+        }
+
+        .courses-table tbody tr:hover {
+            background: #f8fafc;
         }
 
         .filter-form {

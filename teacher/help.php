@@ -2,11 +2,11 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/Auth.php';
-require_once __DIR__ . '/../includes/student_layout.php';
+require_once __DIR__ . '/../includes/teacher_layout.php';
 
-Auth::requireRole('student');
+Auth::requireRole('teacher');
 
-studentLayoutStart('help', 'Help', false);
+teacherLayoutStart('help', 'Help');
 ?>
 
 <style>
@@ -14,6 +14,22 @@ studentLayoutStart('help', 'Help', false);
         max-width: 1000px;
     }
     
+    .help-header {
+        margin-bottom: 2rem;
+    }
+    
+    .help-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    
+    .help-header p {
+        margin: 0;
+        font-size: 1rem;
+        color: #6b7280;
+    }
     
     .help-search {
         margin-bottom: 2rem;
@@ -48,7 +64,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-section-title {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 1rem;
@@ -84,7 +100,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-item-title {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: #1f2937;
         margin: 0;
@@ -117,7 +133,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-item-description {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: #4b5563;
         line-height: 1.6;
         margin: 0 0 1rem 0;
@@ -133,7 +149,7 @@ studentLayoutStart('help', 'Help', false);
         padding: 0.5rem 0;
         padding-left: 1.5rem;
         position: relative;
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: #374151;
         line-height: 1.6;
     }
@@ -219,16 +235,16 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-support-title {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1f2937;
         margin: 0 0 0.5rem 0;
     }
     
     .help-support-intro {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         color: #6b7280;
-        margin: 0 0 1.25rem 0;
+        margin: 0 0 1.5rem 0;
     }
     
     .help-support-info {
@@ -241,7 +257,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-support-item {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         color: #374151;
     }
     
@@ -268,214 +284,188 @@ studentLayoutStart('help', 'Help', false);
 </style>
 
 <div class="help-container">
+    <div class="help-header">
+        <h1>Help & Support</h1>
+        <p>Find answers and guides for managing your courses and students.</p>
+    </div>
+
     <!-- Search Bar -->
     <div class="help-search">
         <div class="help-search-icon">🔍</div>
         <input type="text" id="helpSearch" placeholder="Search for help topics, questions, or guides...">
     </div>
 
-    <!-- Getting Started -->
+    <!-- Course Management -->
     <div class="help-section">
-        <h2 class="help-section-title">Getting Started</h2>
-        <div class="help-item" data-category="getting-started">
+        <h2 class="help-section-title">Course Management</h2>
+        <div class="help-item" data-category="courses">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How to enroll in a course</h3>
+                <h3 class="help-item-title">Creating a new course</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Learn how to enroll in courses available in the system.</p>
+                    <p class="help-item-description">Learn how to create and set up a new course.</p>
                     <ol class="help-item-steps">
-                        <li>Go to the <strong>Courses</strong> page from the navigation menu</li>
-                        <li>Browse available courses or use the search function</li>
-                        <li>Click on a course to view details</li>
-                        <li>Click the "Enroll" button if the course is open for enrollment</li>
-                        <li>Wait for approval if the course requires it</li>
+                        <li>Go to the <strong>Courses</strong> page</li>
+                        <li>Click the "Create Course" or "Add New Course" button</li>
+                        <li>Fill in course details: title, code, description</li>
+                        <li>Set the course status (active/inactive)</li>
+                        <li>Add course materials and resources</li>
+                        <li>Save the course</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="getting-started">
+        <div class="help-item" data-category="courses">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Understanding your dashboard</h3>
+                <h3 class="help-item-title">Managing course materials</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Your dashboard provides an overview of your academic activities.</p>
-                    <ul class="help-item-steps">
-                        <li><strong>Recent Activity:</strong> See your latest assignments, grades, and announcements</li>
-                        <li><strong>Upcoming Deadlines:</strong> View assignments and tasks due soon</li>
-                        <li><strong>Course Overview:</strong> Quick access to your enrolled courses</li>
-                        <li><strong>Statistics:</strong> Track your progress and performance</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="help-item" data-category="getting-started">
-            <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Setting up your profile</h3>
-                <span class="help-item-icon">▼</span>
-            </div>
-            <div class="help-item-content">
-                <div class="help-item-body">
-                    <p class="help-item-description">Complete your profile to help instructors know you better.</p>
+                    <p class="help-item-description">Upload and organize materials for your students.</p>
                     <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong> from the navigation menu</li>
-                        <li>Upload a profile picture (optional but recommended)</li>
-                        <li>Update your personal information (name, phone, address)</li>
-                        <li>Add a bio to introduce yourself</li>
-                        <li>Click "Save Changes" to update your profile</li>
+                        <li>Go to your course page</li>
+                        <li>Navigate to the <strong>Materials</strong> section</li>
+                        <li>Click "Upload Material" or "Add Material"</li>
+                        <li>Choose to upload a file or add a link</li>
+                        <li>Enter a title and description</li>
+                        <li>Save the material</li>
+                        <li>Students can now access it from their course page</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Assignments -->
+    <!-- Assignments & Grading -->
     <div class="help-section">
-        <h2 class="help-section-title">Assignments</h2>
-        <div class="help-item" data-category="assignments">
+        <h2 class="help-section-title">Assignments & Grading</h2>
+        <div class="help-item" data-category="grading">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How to submit assignments</h3>
+                <h3 class="help-item-title">Creating assignments</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Step-by-step guide to submitting your assignments.</p>
+                    <p class="help-item-description">Create assignments for your students.</p>
                     <ol class="help-item-steps">
                         <li>Go to the <strong>Assignments</strong> page</li>
-                        <li>Click on an assignment to expand it</li>
-                        <li>Read the assignment description and requirements</li>
-                        <li>Write your submission text in the "Your Work" textarea</li>
-                        <li>Attach a file if required (click the upload area or drag and drop)</li>
-                        <li>Click the <strong>"Turn In"</strong> button to submit</li>
-                        <li>You can unsubmit before the deadline to make changes</li>
+                        <li>Click "Create Assignment" or "Add New"</li>
+                        <li>Select the course</li>
+                        <li>Enter assignment title, description, and due date</li>
+                        <li>Set maximum score</li>
+                        <li>Add resources if needed (files or links)</li>
+                        <li>Save the assignment</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="assignments">
+        <div class="help-item" data-category="grading">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">What file types can I upload?</h3>
+                <h3 class="help-item-title">Grading student submissions</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Supported file formats for assignment submissions.</p>
-                    <ul class="help-item-steps">
-                        <li><strong>Documents:</strong> PDF, DOC, DOCX, TXT</li>
-                        <li><strong>Presentations:</strong> PPT, PPTX</li>
-                        <li><strong>Spreadsheets:</strong> XLS, XLSX</li>
-                        <li><strong>Images:</strong> PNG, JPG, JPEG</li>
-                        <li><strong>Archives:</strong> ZIP</li>
-                        <li><strong>Maximum file size:</strong> 20MB per file</li>
-                    </ul>
+                    <p class="help-item-description">Grade assignments and provide feedback to students.</p>
+                    <ol class="help-item-steps">
+                        <li>Go to the <strong>Grades</strong> page</li>
+                        <li>Use filters to find specific submissions (by course, assignment, or status)</li>
+                        <li>Click on a submission to view it</li>
+                        <li>Review the student's work and any attached files</li>
+                        <li>Enter the score (out of maximum points)</li>
+                        <li>Add feedback in the feedback textarea</li>
+                        <li>Click "Submit Grade" or "Update Grade"</li>
+                        <li>Students will see the grade immediately</li>
+                    </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="assignments">
+        <div class="help-item" data-category="grading">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Viewing assignment feedback</h3>
+                <h3 class="help-item-title">Managing assignment resources</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">How to access and understand feedback from your instructor.</p>
+                    <p class="help-item-description">Add files and links to assignments for student reference.</p>
                     <ol class="help-item-steps">
-                        <li>Go to the <strong>Assignments</strong> page</li>
-                        <li>Find the assignment that has been graded</li>
-                        <li>Expand the assignment to view details</li>
-                        <li>Check the "Teacher Feedback" section for comments</li>
-                        <li>Review your grade and any suggestions provided</li>
+                        <li>When creating or editing an assignment</li>
+                        <li>Scroll to the "Resources" section</li>
+                        <li>Click "Add Resource"</li>
+                        <li>Choose "File" to upload or "Link" for a URL</li>
+                        <li>Enter a title and upload/enter the resource</li>
+                        <li>Save the resource</li>
+                        <li>Students can view and download resources when viewing the assignment</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Grades -->
+    <!-- Student Management -->
     <div class="help-section">
-        <h2 class="help-section-title">Grades</h2>
-        <div class="help-item" data-category="grades">
+        <h2 class="help-section-title">Student Management</h2>
+        <div class="help-item" data-category="students">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How do I check my grades?</h3>
+                <h3 class="help-item-title">Viewing enrolled students</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Access your grades and track your academic performance.</p>
+                    <p class="help-item-description">See who is enrolled in your courses.</p>
                     <ol class="help-item-steps">
-                        <li>Click on <strong>Grades</strong> in the navigation menu</li>
-                        <li>View grades organized by course</li>
-                        <li>See your average grade for each course</li>
-                        <li>Click on individual assignments to see detailed feedback</li>
-                        <li>Grades update automatically once instructors mark your work</li>
+                        <li>Go to the <strong>Students</strong> page or <strong>Course Students</strong></li>
+                        <li>Select a course from the dropdown or filter</li>
+                        <li>View the list of enrolled students</li>
+                        <li>See student names, enrollment dates, and status</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="grades">
+        <div class="help-item" data-category="students">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Understanding grade calculations</h3>
+                <h3 class="help-item-title">Communicating with students</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Learn how your grades are calculated and displayed.</p>
+                    <p class="help-item-description">Stay in touch with your students.</p>
                     <ul class="help-item-steps">
-                        <li>Each assignment shows your score out of the maximum points</li>
-                        <li>Your percentage is calculated as: (Your Score / Max Score) × 100</li>
-                        <li>Course average is the average of all graded assignments</li>
-                        <li>Color coding: Green (90%+), Blue (80-89%), Yellow (70-79%), Red (&lt;70%)</li>
+                        <li><strong>Announcements:</strong> Post course-wide messages that all students see</li>
+                        <li><strong>Private Messages:</strong> Respond to messages students send on assignment pages</li>
+                        <li><strong>Feedback:</strong> Include detailed feedback when grading assignments</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Account Settings -->
+    <!-- Announcements -->
     <div class="help-section">
-        <h2 class="help-section-title">Account & Settings</h2>
-        <div class="help-item" data-category="settings">
+        <h2 class="help-section-title">Announcements</h2>
+        <div class="help-item" data-category="announcements">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Changing your password</h3>
+                <h3 class="help-item-title">Creating announcements</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Keep your account secure by updating your password regularly.</p>
+                    <p class="help-item-description">Keep students informed with announcements.</p>
                     <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong> from the navigation menu</li>
-                        <li>Scroll to the "Change Password" section</li>
-                        <li>Enter your current password</li>
-                        <li>Enter your new password (minimum 6 characters)</li>
-                        <li>Confirm your new password</li>
-                        <li>Click "Change Password" to save</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-        
-        <div class="help-item" data-category="settings">
-            <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Updating your profile picture</h3>
-                <span class="help-item-icon">▼</span>
-            </div>
-            <div class="help-item-content">
-                <div class="help-item-body">
-                    <p class="help-item-description">Add or change your profile picture.</p>
-                    <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong></li>
-                        <li>In the "Profile Picture" section, click "Choose File"</li>
-                        <li>Select an image file (JPG, PNG, GIF, WebP - max 5MB)</li>
-                        <li>Click "Upload Picture"</li>
-                        <li>Your new picture will appear immediately</li>
+                        <li>Go to the <strong>Announcements</strong> page</li>
+                        <li>Click "Create Announcement" or "New Announcement"</li>
+                        <li>Select the course</li>
+                        <li>Enter a title and content</li>
+                        <li>Check "Pin" if you want it to appear at the top</li>
+                        <li>Click "Post" to publish</li>
+                        <li>Students will see it on their announcements page</li>
                     </ol>
                 </div>
             </div>
@@ -488,51 +478,41 @@ studentLayoutStart('help', 'Help', false);
         <div class="help-faq-list">
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>Can I resubmit assignments?</span>
+                    <span>Can students see their grades immediately?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Resubmission depends on your course policy. You can use the "Unsubmit" button if available before the deadline, but contact your instructor if you need to resubmit after grading.
+                    Yes, once you submit a grade, students can immediately see it on their Grades page along with any feedback you provide.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>How do I contact my instructor?</span>
+                    <span>Can I edit an assignment after students submit?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    You can send private messages directly on assignment pages by scrolling to the "Private Messages" section. You can also check announcements for instructor contact information.
+                    You can edit assignment details, but be aware that students may have already started working on it. Consider creating a new assignment for major changes or clearly communicate any updates.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>What if my grade is not showing up?</span>
+                    <span>What file types can students upload?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Grades appear once your instructor has graded your submission. If you've submitted an assignment but don't see a grade, your instructor may still be reviewing it. Contact your instructor if you have concerns.
+                    Students can upload PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, ZIP, PNG, JPG, and TXT files with a maximum size of 20MB per file.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>Can't access a course?</span>
+                    <span>How do I organize submissions for grading?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Make sure you're enrolled in the course. If you see the course but can't access it, your enrollment may be pending approval. Contact your instructor or administrator for assistance.
-                </div>
-            </div>
-            
-            <div class="help-faq-item" onclick="toggleFAQ(this)">
-                <div class="help-faq-question">
-                    <span>How do I report a technical issue?</span>
-                    <span class="help-faq-icon">▼</span>
-                </div>
-                <div class="help-faq-answer">
-                    Email support@schoollms.com with a description of the issue and a screenshot if possible. Our team will respond within 24 hours during business days (Monday to Friday, 9 AM – 5 PM).
+                    Use the filters on the Grades page to group by assignment or course, filter by status (ungraded/graded), and search by student name. This helps you manage large numbers of submissions efficiently.
                 </div>
             </div>
         </div>
@@ -587,14 +567,12 @@ studentLayoutStart('help', 'Help', false);
             }
         });
         
-        // Show/hide no results message
         if (searchTerm && visibleCount === 0) {
             noResults.style.display = 'block';
         } else {
             noResults.style.display = 'none';
         }
         
-        // Auto-expand matching items
         if (searchTerm) {
             helpItems.forEach(item => {
                 if (!item.classList.contains('hidden')) {
@@ -605,4 +583,4 @@ studentLayoutStart('help', 'Help', false);
     });
 </script>
 
-<?php studentLayoutEnd(); ?>
+<?php teacherLayoutEnd(); ?>

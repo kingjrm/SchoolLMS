@@ -2,11 +2,11 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/Auth.php';
-require_once __DIR__ . '/../includes/student_layout.php';
+require_once __DIR__ . '/../includes/admin_layout.php';
 
-Auth::requireRole('student');
+Auth::requireRole('admin');
 
-studentLayoutStart('help', 'Help', false);
+adminLayoutStart('help', 'Help');
 ?>
 
 <style>
@@ -14,6 +14,22 @@ studentLayoutStart('help', 'Help', false);
         max-width: 1000px;
     }
     
+    .help-header {
+        margin-bottom: 2rem;
+    }
+    
+    .help-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    
+    .help-header p {
+        margin: 0;
+        font-size: 1rem;
+        color: #6b7280;
+    }
     
     .help-search {
         margin-bottom: 2rem;
@@ -48,7 +64,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-section-title {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1f2937;
         margin-bottom: 1rem;
@@ -84,7 +100,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-item-title {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: #1f2937;
         margin: 0;
@@ -117,7 +133,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-item-description {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: #4b5563;
         line-height: 1.6;
         margin: 0 0 1rem 0;
@@ -133,7 +149,7 @@ studentLayoutStart('help', 'Help', false);
         padding: 0.5rem 0;
         padding-left: 1.5rem;
         position: relative;
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: #374151;
         line-height: 1.6;
     }
@@ -219,16 +235,16 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-support-title {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1f2937;
         margin: 0 0 0.5rem 0;
     }
     
     .help-support-intro {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         color: #6b7280;
-        margin: 0 0 1.25rem 0;
+        margin: 0 0 1.5rem 0;
     }
     
     .help-support-info {
@@ -241,7 +257,7 @@ studentLayoutStart('help', 'Help', false);
     }
     
     .help-support-item {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         color: #374151;
     }
     
@@ -268,214 +284,229 @@ studentLayoutStart('help', 'Help', false);
 </style>
 
 <div class="help-container">
+    <div class="help-header">
+        <h1>Help & Support</h1>
+        <p>Find answers and guides for system administration.</p>
+    </div>
+
     <!-- Search Bar -->
     <div class="help-search">
         <div class="help-search-icon">🔍</div>
         <input type="text" id="helpSearch" placeholder="Search for help topics, questions, or guides...">
     </div>
 
-    <!-- Getting Started -->
+    <!-- User Management -->
     <div class="help-section">
-        <h2 class="help-section-title">Getting Started</h2>
-        <div class="help-item" data-category="getting-started">
+        <h2 class="help-section-title">User Management</h2>
+        <div class="help-item" data-category="users">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How to enroll in a course</h3>
+                <h3 class="help-item-title">Creating user accounts</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Learn how to enroll in courses available in the system.</p>
+                    <p class="help-item-description">Create accounts for students, teachers, or administrators.</p>
                     <ol class="help-item-steps">
-                        <li>Go to the <strong>Courses</strong> page from the navigation menu</li>
-                        <li>Browse available courses or use the search function</li>
-                        <li>Click on a course to view details</li>
-                        <li>Click the "Enroll" button if the course is open for enrollment</li>
-                        <li>Wait for approval if the course requires it</li>
+                        <li>Go to the <strong>Users</strong> page</li>
+                        <li>Click "Add New User" or "Create User"</li>
+                        <li>Fill in required information: username, email, password</li>
+                        <li>Enter first name and last name</li>
+                        <li>Select the role (Student, Teacher, or Admin)</li>
+                        <li>Set account status (Active/Inactive)</li>
+                        <li>Save the user account</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="getting-started">
+        <div class="help-item" data-category="users">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Understanding your dashboard</h3>
+                <h3 class="help-item-title">Managing user roles</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Your dashboard provides an overview of your academic activities.</p>
-                    <ul class="help-item-steps">
-                        <li><strong>Recent Activity:</strong> See your latest assignments, grades, and announcements</li>
-                        <li><strong>Upcoming Deadlines:</strong> View assignments and tasks due soon</li>
-                        <li><strong>Course Overview:</strong> Quick access to your enrolled courses</li>
-                        <li><strong>Statistics:</strong> Track your progress and performance</li>
-                    </ul>
+                    <p class="help-item-description">Change user roles and permissions.</p>
+                    <ol class="help-item-steps">
+                        <li>Go to the <strong>Users</strong> page</li>
+                        <li>Find the user you want to modify</li>
+                        <li>Click "Edit" or the user's name</li>
+                        <li>Change the role dropdown</li>
+                        <li>Save changes</li>
+                        <li>Note: Changing roles may affect access to certain features</li>
+                    </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="getting-started">
+        <div class="help-item" data-category="users">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Setting up your profile</h3>
+                <h3 class="help-item-title">Activating/deactivating users</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Complete your profile to help instructors know you better.</p>
+                    <p class="help-item-description">Control user access to the system.</p>
                     <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong> from the navigation menu</li>
-                        <li>Upload a profile picture (optional but recommended)</li>
-                        <li>Update your personal information (name, phone, address)</li>
-                        <li>Add a bio to introduce yourself</li>
-                        <li>Click "Save Changes" to update your profile</li>
+                        <li>Go to the <strong>Users</strong> page</li>
+                        <li>Find the user account</li>
+                        <li>Change the status from Active to Inactive (or vice versa)</li>
+                        <li>Inactive users cannot log in but their data is preserved</li>
+                        <li>Save the changes</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Assignments -->
+    <!-- Course Administration -->
     <div class="help-section">
-        <h2 class="help-section-title">Assignments</h2>
-        <div class="help-item" data-category="assignments">
+        <h2 class="help-section-title">Course Administration</h2>
+        <div class="help-item" data-category="courses">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How to submit assignments</h3>
+                <h3 class="help-item-title">Viewing all courses</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Step-by-step guide to submitting your assignments.</p>
+                    <p class="help-item-description">Monitor and manage all courses in the system.</p>
                     <ol class="help-item-steps">
-                        <li>Go to the <strong>Assignments</strong> page</li>
-                        <li>Click on an assignment to expand it</li>
-                        <li>Read the assignment description and requirements</li>
-                        <li>Write your submission text in the "Your Work" textarea</li>
-                        <li>Attach a file if required (click the upload area or drag and drop)</li>
-                        <li>Click the <strong>"Turn In"</strong> button to submit</li>
-                        <li>You can unsubmit before the deadline to make changes</li>
+                        <li>Go to the <strong>Courses</strong> page</li>
+                        <li>View all courses with their details</li>
+                        <li>Use filters to find specific courses</li>
+                        <li>See course status, teacher, and enrollment numbers</li>
+                        <li>Click on a course to view detailed information</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="assignments">
+        <div class="help-item" data-category="courses">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">What file types can I upload?</h3>
+                <h3 class="help-item-title">Assigning teachers to courses</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Supported file formats for assignment submissions.</p>
-                    <ul class="help-item-steps">
-                        <li><strong>Documents:</strong> PDF, DOC, DOCX, TXT</li>
-                        <li><strong>Presentations:</strong> PPT, PPTX</li>
-                        <li><strong>Spreadsheets:</strong> XLS, XLSX</li>
-                        <li><strong>Images:</strong> PNG, JPG, JPEG</li>
-                        <li><strong>Archives:</strong> ZIP</li>
-                        <li><strong>Maximum file size:</strong> 20MB per file</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="help-item" data-category="assignments">
-            <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Viewing assignment feedback</h3>
-                <span class="help-item-icon">▼</span>
-            </div>
-            <div class="help-item-content">
-                <div class="help-item-body">
-                    <p class="help-item-description">How to access and understand feedback from your instructor.</p>
+                    <p class="help-item-description">Assign teachers to manage courses.</p>
                     <ol class="help-item-steps">
-                        <li>Go to the <strong>Assignments</strong> page</li>
-                        <li>Find the assignment that has been graded</li>
-                        <li>Expand the assignment to view details</li>
-                        <li>Check the "Teacher Feedback" section for comments</li>
-                        <li>Review your grade and any suggestions provided</li>
+                        <li>Go to the <strong>Courses</strong> page</li>
+                        <li>Find the course you want to assign</li>
+                        <li>Click "Edit" or the course name</li>
+                        <li>Select a teacher from the teacher dropdown</li>
+                        <li>Save the changes</li>
+                        <li>The teacher will now have access to manage that course</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Grades -->
+    <!-- Enrollment Management -->
     <div class="help-section">
-        <h2 class="help-section-title">Grades</h2>
-        <div class="help-item" data-category="grades">
+        <h2 class="help-section-title">Enrollment Management</h2>
+        <div class="help-item" data-category="enrollments">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">How do I check my grades?</h3>
+                <h3 class="help-item-title">Viewing enrollments</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Access your grades and track your academic performance.</p>
+                    <p class="help-item-description">Monitor student enrollments across all courses.</p>
                     <ol class="help-item-steps">
-                        <li>Click on <strong>Grades</strong> in the navigation menu</li>
-                        <li>View grades organized by course</li>
-                        <li>See your average grade for each course</li>
-                        <li>Click on individual assignments to see detailed feedback</li>
-                        <li>Grades update automatically once instructors mark your work</li>
+                        <li>Go to the <strong>Enrollments</strong> page</li>
+                        <li>View all student-course enrollments</li>
+                        <li>Filter by course, student, or status</li>
+                        <li>See enrollment dates and current status</li>
+                        <li>Use search to find specific enrollments</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="grades">
+        <div class="help-item" data-category="enrollments">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Understanding grade calculations</h3>
+                <h3 class="help-item-title">Manual enrollment</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Learn how your grades are calculated and displayed.</p>
-                    <ul class="help-item-steps">
-                        <li>Each assignment shows your score out of the maximum points</li>
-                        <li>Your percentage is calculated as: (Your Score / Max Score) × 100</li>
-                        <li>Course average is the average of all graded assignments</li>
-                        <li>Color coding: Green (90%+), Blue (80-89%), Yellow (70-79%), Red (&lt;70%)</li>
-                    </ul>
+                    <p class="help-item-description">Manually enroll students in courses.</p>
+                    <ol class="help-item-steps">
+                        <li>Go to the <strong>Enrollments</strong> page</li>
+                        <li>Click "Add Enrollment" or "Enroll Student"</li>
+                        <li>Select a student from the dropdown</li>
+                        <li>Select a course</li>
+                        <li>Set enrollment status (usually "Enrolled")</li>
+                        <li>Save the enrollment</li>
+                        <li>The student will now have access to the course</li>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Account Settings -->
+    <!-- Academic Terms -->
     <div class="help-section">
-        <h2 class="help-section-title">Account & Settings</h2>
-        <div class="help-item" data-category="settings">
+        <h2 class="help-section-title">Academic Terms</h2>
+        <div class="help-item" data-category="terms">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Changing your password</h3>
+                <h3 class="help-item-title">Creating academic terms</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Keep your account secure by updating your password regularly.</p>
+                    <p class="help-item-description">Set up academic terms or semesters.</p>
                     <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong> from the navigation menu</li>
-                        <li>Scroll to the "Change Password" section</li>
-                        <li>Enter your current password</li>
-                        <li>Enter your new password (minimum 6 characters)</li>
-                        <li>Confirm your new password</li>
-                        <li>Click "Change Password" to save</li>
+                        <li>Go to the <strong>Terms</strong> page</li>
+                        <li>Click "Create Term" or "Add New Term"</li>
+                        <li>Enter term name (e.g., "Fall 2024", "Spring Semester")</li>
+                        <li>Set start date and end date</li>
+                        <li>Choose whether to set as active</li>
+                        <li>Save the term</li>
+                        <li>Note: Only one term can be active at a time</li>
                     </ol>
                 </div>
             </div>
         </div>
         
-        <div class="help-item" data-category="settings">
+        <div class="help-item" data-category="terms">
             <div class="help-item-header" onclick="toggleHelpItem(this)">
-                <h3 class="help-item-title">Updating your profile picture</h3>
+                <h3 class="help-item-title">Setting active terms</h3>
                 <span class="help-item-icon">▼</span>
             </div>
             <div class="help-item-content">
                 <div class="help-item-body">
-                    <p class="help-item-description">Add or change your profile picture.</p>
+                    <p class="help-item-description">Activate a term for the current academic period.</p>
                     <ol class="help-item-steps">
-                        <li>Go to <strong>Settings</strong></li>
-                        <li>In the "Profile Picture" section, click "Choose File"</li>
-                        <li>Select an image file (JPG, PNG, GIF, WebP - max 5MB)</li>
-                        <li>Click "Upload Picture"</li>
-                        <li>Your new picture will appear immediately</li>
+                        <li>Go to the <strong>Terms</strong> page</li>
+                        <li>Find the term you want to activate</li>
+                        <li>Click "Set Active" or toggle the active status</li>
+                        <li>The previous active term will be deactivated automatically</li>
+                        <li>Only one term can be active at a time</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports -->
+    <div class="help-section">
+        <h2 class="help-section-title">Reports & Analytics</h2>
+        <div class="help-item" data-category="reports">
+            <div class="help-item-header" onclick="toggleHelpItem(this)">
+                <h3 class="help-item-title">Accessing system reports</h3>
+                <span class="help-item-icon">▼</span>
+            </div>
+            <div class="help-item-content">
+                <div class="help-item-body">
+                    <p class="help-item-description">View comprehensive system-wide reports.</p>
+                    <ol class="help-item-steps">
+                        <li>Go to the <strong>Reports</strong> page</li>
+                        <li>Select the type of report you want to view</li>
+                        <li>Apply filters (date range, course, user, etc.)</li>
+                        <li>View statistics and analytics</li>
+                        <li>Export reports if needed</li>
                     </ol>
                 </div>
             </div>
@@ -488,51 +519,41 @@ studentLayoutStart('help', 'Help', false);
         <div class="help-faq-list">
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>Can I resubmit assignments?</span>
+                    <span>Can I bulk import users?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Resubmission depends on your course policy. You can use the "Unsubmit" button if available before the deadline, but contact your instructor if you need to resubmit after grading.
+                    Currently, users must be created individually through the interface. For bulk operations, contact the development team for assistance with CSV imports or database operations.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>How do I contact my instructor?</span>
+                    <span>How do I deactivate a user account?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    You can send private messages directly on assignment pages by scrolling to the "Private Messages" section. You can also check announcements for instructor contact information.
+                    Go to the Users page, find the user, and change their status from "Active" to "Inactive". Inactive users cannot log in, but all their data (grades, submissions, etc.) is preserved in the system.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>What if my grade is not showing up?</span>
+                    <span>What reports are available?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Grades appear once your instructor has graded your submission. If you've submitted an assignment but don't see a grade, your instructor may still be reviewing it. Contact your instructor if you have concerns.
+                    The Reports page provides user activity reports, course statistics, enrollment data, grade distributions, and system usage metrics. Reports can be filtered by date range, course, user role, and other criteria.
                 </div>
             </div>
             
             <div class="help-faq-item" onclick="toggleFAQ(this)">
                 <div class="help-faq-question">
-                    <span>Can't access a course?</span>
+                    <span>How do I manage academic terms?</span>
                     <span class="help-faq-icon">▼</span>
                 </div>
                 <div class="help-faq-answer">
-                    Make sure you're enrolled in the course. If you see the course but can't access it, your enrollment may be pending approval. Contact your instructor or administrator for assistance.
-                </div>
-            </div>
-            
-            <div class="help-faq-item" onclick="toggleFAQ(this)">
-                <div class="help-faq-question">
-                    <span>How do I report a technical issue?</span>
-                    <span class="help-faq-icon">▼</span>
-                </div>
-                <div class="help-faq-answer">
-                    Email support@schoollms.com with a description of the issue and a screenshot if possible. Our team will respond within 24 hours during business days (Monday to Friday, 9 AM – 5 PM).
+                    Go to the Terms page to create, edit, and activate academic terms. Only one term can be active at a time. When you activate a new term, the previous active term is automatically deactivated.
                 </div>
             </div>
         </div>
@@ -587,14 +608,12 @@ studentLayoutStart('help', 'Help', false);
             }
         });
         
-        // Show/hide no results message
         if (searchTerm && visibleCount === 0) {
             noResults.style.display = 'block';
         } else {
             noResults.style.display = 'none';
         }
         
-        // Auto-expand matching items
         if (searchTerm) {
             helpItems.forEach(item => {
                 if (!item.classList.contains('hidden')) {
@@ -605,4 +624,4 @@ studentLayoutStart('help', 'Help', false);
     });
 </script>
 
-<?php studentLayoutEnd(); ?>
+<?php adminLayoutEnd(); ?>

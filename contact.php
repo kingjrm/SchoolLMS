@@ -143,26 +143,140 @@
             box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
         }
 
-        /* Page Header */
-        .page-header {
-            background-color: var(--bg-primary);
-            padding: 3rem 0;
-            border-bottom: 1px solid var(--border-color);
+        /* Hero Section */
+        .hero {
+            background: var(--bg-primary);
+            padding: 3rem 0 3rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .page-header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: start;
         }
 
-        .page-header p {
-            font-size: 1rem;
+        .hero-text {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
             color: var(--text-secondary);
-            max-width: 640px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .hero-text h1 .highlight {
+            color: var(--primary-color);
+        }
+
+        .hero-text p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-image {
+            position: relative;
+            animation: fadeInRight 0.8s ease-out 0.3s backwards;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 85%;
+            height: auto;
+            display: block;
+        }
+
+        /* Feature Badges */
+        .feature-badges {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .feature-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-badge-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-badge-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary-color);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .feature-badge-text h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-badge-text p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             margin: 0;
-            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* Container */
@@ -478,22 +592,104 @@
             stroke-width: 2;
         }
 
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .cta-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary-color);
+            border-color: white;
+        }
+
         /* Responsive */
-        @media (max-width: 768px) {
-            .contact-grid {
+        @media (max-width: 1024px) {
+            .hero-content {
                 grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
             }
 
-            .page-header h1 {
-                font-size: 2rem;
+            .hero-text h1 {
+                font-size: 2.5rem;
             }
 
+            .feature-badges {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
             .nav-center {
                 display: none;
             }
 
+            .hero {
+                padding: 3rem 0 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
             .contact-form {
                 padding: 1.5rem;
+            }
+
+            .cta-section {
+                padding: 4rem 0;
+            }
+
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
 
             .footer-content {
@@ -519,11 +715,63 @@
         </div>
     </nav>
 
-    <!-- Page Header -->
-    <section class="page-header">
+    <!-- Hero Section -->
+    <section class="hero">
         <div class="container">
-            <h1>Get In Touch</h1>
-            <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <p class="hero-subtitle">Get In Touch</p>
+                    <h1>Contact Our <span class="highlight">Support Team</span></h1>
+                    <p>Have questions about our learning platform? Need help getting started? Our dedicated support team is here to help you succeed in your educational journey.</p>
+
+                    <div class="hero-buttons">
+                        <a href="#contact-form" class="btn-primary">Send Message</a>
+                        <a href="mailto:support@schoollms.com" class="btn-secondary">Email Support</a>
+                    </div>
+
+                    <div class="feature-badges">
+                        <div class="feature-badge">
+                            <div class="feature-badge-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="feature-badge-text">
+                                <h3>24/7 Support</h3>
+                                <p>Always here to help</p>
+                            </div>
+                        </div>
+                        <div class="feature-badge">
+                            <div class="feature-badge-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="feature-badge-text">
+                                <h3>Quick Response</h3>
+                                <p>Within 24 hours</p>
+                            </div>
+                        </div>
+                        <div class="feature-badge">
+                            <div class="feature-badge-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="feature-badge-text">
+                                <h3>Expert Help</h3>
+                                <p>Professional assistance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="assets/images/redspartan.png" alt="Contact Support">
+                </div>
+            </div>
         </div>
     </section>
 
@@ -594,7 +842,7 @@
             </div>
 
             <!-- Contact Form -->
-            <div class="contact-form">
+            <div id="contact-form" class="contact-form">
                 <h2>Send Us a Message</h2>
                 
                 <form method="POST" action="">
@@ -642,6 +890,20 @@
         </div>
         </div>
     </div>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Start Your Learning Journey?</h2>
+                <p>Join thousands of students who are already enhancing their skills with our comprehensive learning platform.</p>
+                <div class="cta-buttons">
+                    <a href="register.php" class="btn-primary">Get Started Today</a>
+                    <a href="courses.php" class="btn-secondary">Browse Courses</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">

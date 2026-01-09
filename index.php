@@ -5,12 +5,17 @@ require_once 'includes/Auth.php';
 
 // Fetch latest news and announcements
 try {
+    // Check if PDO is available
+    if (!isset($pdo)) {
+        throw new Exception("Database connection not available");
+    }
+
     // Get latest 3 news items
     $news_query = $pdo->prepare("
         SELECT id, title, summary, content, image_url, published_at, author
-        FROM news 
+        FROM news
         WHERE status = 'published' AND published_at <= NOW()
-        ORDER BY published_at DESC 
+        ORDER BY published_at DESC
         LIMIT 3
     ");
     $news_query->execute();
@@ -667,7 +672,6 @@ try {
         /* News Section */
         .news-section {
             padding: 4rem 0;
-            background-color: var(--bg-primary);
         }
 
         .news-grid {
@@ -1246,117 +1250,117 @@ try {
         </div>
     </section>
 
-    <!-- News Section -->
-    <section class="news-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Latest News</h2>
-                <p>Stay updated with the latest happenings in our learning community</p>
-            </div>
-            
-            <?php if (empty($news_items)): ?>
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
-                    </svg>
-                    <p>No news articles available at the moment.</p>
+        <!-- News Section -->
+        <section class="news-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Latest News</h2>
+                    <p>Stay updated with the latest happenings in our learning community</p>
                 </div>
-            <?php else: ?>
-                <div class="news-grid">
-                    <?php foreach ($news_items as $news): ?>
-                        <div class="news-card">
-                            <div class="news-image">
-                                <?php if (!empty($news['image_url'])): ?>
-                                    <img src="<?php echo htmlspecialchars($news['image_url']); ?>" alt="<?php echo htmlspecialchars($news['title']); ?>">
-                                <?php else: ?>
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
-                                    </svg>
-                                <?php endif; ?>
-                            </div>
-                            <div class="news-content">
-                                <div class="news-meta">
-                                    <svg viewBox="0 0 24 24">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                    <span><?php echo date('M d, Y', strtotime($news['published_at'])); ?></span>
-                                    <?php if (!empty($news['author'])): ?>
-                                        <span>•</span>
-                                        <span><?php echo htmlspecialchars($news['author']); ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <h3><?php echo htmlspecialchars($news['title']); ?></h3>
-                                <p><?php echo htmlspecialchars($news['summary']); ?></p>
-                                <a href="news.php?id=<?php echo $news['id']; ?>" class="news-link">
-                                    Read More
-                                    <svg viewBox="0 0 24 24">
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                        <polyline points="12 5 19 12 12 19"></polyline>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </section>
 
-    <!-- Announcements Section -->
-    <section class="announcements-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Announcements</h2>
-                <p>Important updates and notices from the administration</p>
-            </div>
-            
-            <?php if (empty($announcements)): ?>
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    <p>No announcements at this time.</p>
-                </div>
-            <?php else: ?>
-                <div class="announcements-container">
-                    <?php foreach ($announcements as $announcement): ?>
-                        <div class="announcement-card">
-                            <div class="announcement-icon <?php echo $announcement['priority'] === 'high' ? 'priority-high' : ''; ?>">
-                                <svg viewBox="0 0 24 24">
-                                    <?php if ($announcement['priority'] === 'high'): ?>
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12" y2="16"></line>
+                <?php if (empty($news_items)): ?>
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
+                        </svg>
+                        <p>No news articles available at the moment.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="news-grid">
+                        <?php foreach ($news_items as $news): ?>
+                            <div class="news-card">
+                                <div class="news-image">
+                                    <?php if (!empty($news['image_url'])): ?>
+                                        <img src="<?php echo htmlspecialchars($news['image_url']); ?>" alt="<?php echo htmlspecialchars($news['title']); ?>">
                                     <?php else: ?>
-                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                    <?php endif; ?>
-                                </svg>
-                            </div>
-                            <div class="announcement-content">
-                                <div class="announcement-header">
-                                    <h3><?php echo htmlspecialchars($announcement['title']); ?></h3>
-                                    <?php if ($announcement['priority'] !== 'normal'): ?>
-                                        <span class="priority-badge priority-<?php echo htmlspecialchars($announcement['priority']); ?>">
-                                            <?php echo strtoupper($announcement['priority']); ?>
-                                        </span>
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
+                                        </svg>
                                     <?php endif; ?>
                                 </div>
-                                <div class="announcement-date">
-                                    <?php echo date('F j, Y \a\t g:i A', strtotime($announcement['posted_at'])); ?>
+                                <div class="news-content">
+                                    <div class="news-meta">
+                                        <svg viewBox="0 0 24 24">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        <span><?php echo date('M d, Y', strtotime($news['published_at'])); ?></span>
+                                        <?php if (!empty($news['author'])): ?>
+                                            <span>•</span>
+                                            <span><?php echo htmlspecialchars($news['author']); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <h3><?php echo htmlspecialchars($news['title']); ?></h3>
+                                    <p><?php echo htmlspecialchars($news['summary']); ?></p>
+                                    <a href="news.php?id=<?php echo $news['id']; ?>" class="news-link">
+                                        Read More
+                                        <svg viewBox="0 0 24 24">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                        </svg>
+                                    </a>
                                 </div>
-                                <p><?php echo nl2br(htmlspecialchars($announcement['content'])); ?></p>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <!-- Announcements Section -->
+        <section class="announcements-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Announcements</h2>
+                    <p>Important updates and notices from the administration</p>
                 </div>
-            <?php endif; ?>
-        </div>
-    </section>
+
+                <?php if (empty($announcements)): ?>
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <p>No announcements at this time.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="announcements-container">
+                        <?php foreach ($announcements as $announcement): ?>
+                            <div class="announcement-card">
+                                <div class="announcement-icon <?php echo $announcement['priority'] === 'high' ? 'priority-high' : ''; ?>">
+                                    <svg viewBox="0 0 24 24">
+                                        <?php if ($announcement['priority'] === 'high'): ?>
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12" y2="16"></line>
+                                        <?php else: ?>
+                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                        <?php endif; ?>
+                                    </svg>
+                                </div>
+                                <div class="announcement-content">
+                                    <div class="announcement-header">
+                                        <h3><?php echo htmlspecialchars($announcement['title']); ?></h3>
+                                        <?php if ($announcement['priority'] !== 'normal'): ?>
+                                            <span class="priority-badge priority-<?php echo htmlspecialchars($announcement['priority']); ?>">
+                                                <?php echo strtoupper($announcement['priority']); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="announcement-date">
+                                        <?php echo date('F j, Y \a\t g:i A', strtotime($announcement['posted_at'])); ?>
+                                    </div>
+                                    <p><?php echo nl2br(htmlspecialchars($announcement['content'])); ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
 
     <!-- Footer -->
     <footer class="footer">

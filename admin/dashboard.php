@@ -40,9 +40,33 @@ try {
     } catch (Exception $e) {
         $activity_logs = [];
     }
+
+    // Get news statistics
+    $total_news = 0;
+    $published_news = 0;
+    $draft_news = 0;
+    $recent_news = [];
+
+    try {
+        $stmt = $pdo->query("SELECT COUNT(*) as count FROM news");
+        $total_news = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        $stmt = $pdo->query("SELECT COUNT(*) as count FROM news WHERE status = 'published'");
+        $published_news = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        $stmt = $pdo->query("SELECT COUNT(*) as count FROM news WHERE status = 'draft'");
+        $draft_news = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        $stmt = $pdo->query("SELECT id, title, status, created_at FROM news ORDER BY created_at DESC LIMIT 5");
+        $recent_news = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        // News table might not exist yet
+    }
 } catch (Exception $e) {
     $total_users = $total_courses = $total_enrollments = $active_terms = 0;
     $users_by_role = $enrollments_by_term = $activity_logs = [];
+    $total_news = $published_news = $draft_news = 0;
+    $recent_news = [];
 }
 
 adminLayoutStart('dashboard', 'Dashboard');
@@ -65,6 +89,14 @@ adminLayoutStart('dashboard', 'Dashboard');
             <div class="stat-card">
                 <div class="stat-value"><?php echo $active_terms; ?></div>
                 <div class="stat-label">Active Terms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><?php echo $total_news; ?></div>
+                <div class="stat-label">Total News</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><?php echo $published_news; ?></div>
+                <div class="stat-label">Published News</div>
             </div>
         </div>
 
@@ -153,6 +185,69 @@ adminLayoutStart('dashboard', 'Dashboard');
                 <?php else: ?>
                     <p style="color:#9ca3af; font-size:.88rem;">No recent activity logged</p>
                 <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- News Management Section -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <div style="padding: 1.25rem; border-bottom: 1px solid #e5e7eb;">
+                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                    News Management
+                    <a href="news.php" style="margin-left: auto; background: #f97316; color: white; padding: 0.375rem 0.75rem; border-radius: 0.375rem; text-decoration: none; font-size: 0.8rem; font-weight: 600;">Manage News</a>
+                </h3>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #f97316; margin-bottom: 0.25rem;"><?php echo $total_news; ?></div>
+                        <div style="font-size: 0.8rem; color: #6b7280;">Total Articles</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem; border: 1px solid #bbf7d0;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #22c55e; margin-bottom: 0.25rem;"><?php echo $published_news; ?></div>
+                        <div style="font-size: 0.8rem; color: #6b7280;">Published</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #fef3c7; border-radius: 0.5rem; border: 1px solid #fde68a;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #f59e0b; margin-bottom: 0.25rem;"><?php echo $draft_news; ?></div>
+                        <div style="font-size: 0.8rem; color: #6b7280;">Drafts</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #0f172a;">Recent News Articles</h4>
+                    <?php if (!empty($recent_news)): ?>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <?php foreach ($recent_news as $news): ?>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; background: #f8fafc;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;"><?php echo htmlspecialchars($news['title']); ?></div>
+                                        <div style="font-size: 0.8rem; color: #6b7280;">
+                                            <?php echo date('M d, Y', strtotime($news['created_at'])); ?> •
+                                            <span class="badge <?php echo $news['status'] === 'published' ? 'badge-high' : 'badge-medium'; ?>" style="font-size: 0.7rem; padding: 0.15rem 0.4rem;">
+                                                <?php echo ucfirst($news['status']); ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="news.php" style="color: #f97316; text-decoration: none; font-size: 0.8rem; font-weight: 600;">Edit</a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div style="text-align: center; padding: 2rem; color: #9ca3af;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin: 0 auto 1rem; opacity: 0.5;">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                            </svg>
+                            <p>No news articles yet. <a href="news.php" style="color: #f97316; text-decoration: none; font-weight: 600;">Create your first article</a></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>

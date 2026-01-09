@@ -6,6 +6,14 @@ require_once 'includes/helpers.php';
 
 $error = '';
 $success = '';
+$step = 'email'; // 'email', 'otp', or 'password'
+
+// Handle retry - reset to email step
+if (isset($_GET['retry'])) {
+    $step = 'email';
+    unset($_SESSION['reset_email']);
+    unset($_SESSION['otp_verified']);
+}
 
 if (Auth::isLoggedIn()) {
     if (Auth::hasRole('admin')) {
@@ -18,40 +26,79 @@ if (Auth::isLoggedIn()) {
     exit;
 }
 
-// Show success message after registration
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
-} elseif (isset($_GET['registered'])) {
-    $success = 'Your account has been created. Please sign in.';
-}
+// Handle email submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+    $email = sanitize($_POST['email'] ?? '');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username_or_email = sanitize($_POST['username_or_email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if (empty($username_or_email) || empty($password)) {
-        $error = 'Please fill in all fields';
+    if (empty($email)) {
+        $error = 'Please enter your email address';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Please enter a valid email address';
     } else {
         $auth = new Auth();
-        $result = $auth->login($username_or_email, $password);
-        
+        $result = $auth->requestPasswordReset($email);
+
         if ($result['success']) {
-            if (Auth::hasRole('admin')) {
-                header('Location: admin/dashboard.php', true, 302);
-            } elseif (Auth::hasRole('teacher')) {
-                header('Location: teacher/dashboard.php', true, 302);
-            } else {
-                header('Location: student/dashboard.php', true, 302);
-            }
-            exit;
+            $success = $result['message'];
+            $step = 'otp';
+            $_SESSION['reset_email'] = $email;
         } else {
             $error = $result['message'];
-            if (strpos(strtolower($error), 'not verified') !== false && empty($_SESSION['pending_verify_email'])) {
-                if (filter_var($username_or_email, FILTER_VALIDATE_EMAIL)) {
-                    $_SESSION['pending_verify_email'] = $username_or_email;
-                }
-            }
+        }
+    }
+}
+
+// Handle OTP verification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_otp'])) {
+    $otp = sanitize($_POST['otp'] ?? '');
+    $email = $_SESSION['reset_email'] ?? '';
+
+    if (empty($email)) {
+        $error = 'Session expired. Please start over.';
+        $step = 'email';
+    } elseif (empty($otp)) {
+        $error = 'Please enter the verification code';
+    } else {
+        require_once __DIR__ . '/includes/OTP.php';
+        $otpVerify = otp_verify($email, $otp, 'password_reset');
+
+        if ($otpVerify['success']) {
+            $success = 'Code verified successfully. Please set your new password.';
+            $step = 'password';
+            $_SESSION['otp_verified'] = true;
+        } else {
+            $error = $otpVerify['message'] ?? 'Invalid or expired code';
+        }
+    }
+}
+
+// Handle password reset
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_password'])) {
+    $newPassword = $_POST['new_password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+    $email = $_SESSION['reset_email'] ?? '';
+
+    if (empty($email) || !isset($_SESSION['otp_verified'])) {
+        $error = 'Session expired. Please start over.';
+        $step = 'email';
+    } elseif (empty($newPassword)) {
+        $error = 'Please enter a new password';
+    } elseif (strlen($newPassword) < 6) {
+        $error = 'Password must be at least 6 characters';
+    } elseif ($newPassword !== $confirmPassword) {
+        $error = 'Passwords do not match';
+    } else {
+        $auth = new Auth();
+        $result = $auth->resetPassword($email, '', $newPassword); // OTP already verified
+
+        if ($result['success']) {
+            $success = $result['message'];
+            unset($_SESSION['reset_email']);
+            unset($_SESSION['otp_verified']);
+            // Redirect to login after 3 seconds
+            header("refresh:3;url=login.php");
+        } else {
+            $error = $result['message'];
         }
     }
 }
@@ -61,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - School LMS</title>
+    <title>Forgot Password - School LMS</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -202,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Main Container */
-        .login-container {
+        .forgot-container {
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -216,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Left Side - Form */
-        .login-form-section {
+        .forgot-form-section {
             padding: 1.5rem 2.5rem;
             overflow-y: auto;
             display: flex;
@@ -260,7 +307,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .form-group {
             margin-bottom: 0.75rem;
-            position: relative;
         }
 
         .form-group label {
@@ -274,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-group input {
             width: 100%;
             height: 3rem;
-            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 0.5rem;
             font-size: 0.875rem;
@@ -283,34 +329,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--text-primary);
             transition: all 0.3s ease;
             box-sizing: border-box;
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-            width: 20px;
-            height: 20px;
-        }
-
-        .password-toggle:hover {
-            color: var(--primary-color);
-        }
-
-        .password-toggle svg {
-            width: 18px;
-            height: 18px;
         }
 
         .form-group input::placeholder {
@@ -323,24 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
-        .form-options {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-        }
-
-        .form-options a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .form-options a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-signin {
+        .btn-submit {
             width: 100%;
             padding: 0.875rem;
             background-color: var(--primary-color);
@@ -354,57 +355,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-family: 'Poppins', sans-serif;
         }
 
-        .btn-signin:hover {
+        .btn-submit:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 1.25rem 0;
-            color: var(--text-tertiary);
-            font-size: 0.8rem;
-        }
-
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background-color: var(--border-color);
-        }
-
-        .social-login {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .social-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            border-color: var(--primary-color);
-            background-color: var(--bg-secondary);
-        }
-
-        .social-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 2;
         }
 
         .form-footer {
@@ -425,13 +379,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Right Side - Image */
-        .login-image-section {
+        .forgot-image-section {
             position: relative;
             overflow: hidden;
             background-color: var(--bg-secondary);
         }
 
-        .login-image-section img {
+        .forgot-image-section img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -517,16 +471,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .login-container {
+            .forgot-container {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
 
-            .login-image-section {
+            .forgot-image-section {
                 display: none;
             }
 
-            .login-form-section {
+            .forgot-form-section {
                 max-width: 500px;
             }
         }
@@ -536,7 +490,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 display: none;
             }
 
-            .login-form-section {
+            .forgot-form-section {
                 padding: 1.5rem;
             }
 
@@ -558,17 +512,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a href="contact.php">Contact</a></li>
             </ul>
             <div class="nav-right">
-                <a href="register.php" class="btn-primary">Sign Up</a>
+                <a href="login.php" class="btn-primary">Sign In</a>
             </div>
         </div>
     </nav>
 
-
-
     <!-- Main Content -->
-    <div class="login-container">
+    <div class="forgot-container">
         <!-- Left Side -->
-        <div class="login-form-section">
+        <div class="forgot-form-section">
             <div class="form-header">
                 <div class="form-logo">
                     <svg viewBox="0 0 24 24">
@@ -577,8 +529,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </svg>
                     Your logo
                 </div>
-                <h1>Login</h1>
-                <p>Sign in to your account</p>
+                <h1><?php 
+                    if ($step === 'email') echo 'Forgot Password';
+                    elseif ($step === 'otp') echo 'Verify Code';
+                    else echo 'Set New Password';
+                ?></h1>
+                <p><?php 
+                    if ($step === 'email') echo 'Enter your email to receive a reset code';
+                    elseif ($step === 'otp') echo 'Enter the verification code sent to your email';
+                    else echo 'Enter your new password';
+                ?></p>
             </div>
 
             <?php if ($success): ?>
@@ -590,77 +550,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST">
-                <div class="form-group">
-                    <label for="username_or_email">Email or Username</label>
-                    <input type="text" id="username_or_email" name="username_or_email" placeholder="your@email.com" required autofocus>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <button type="button" class="password-toggle" id="password-toggle" title="Show password">
-                        <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="form-options">
-                    <a href="forgot-password.php">Forgot Password?</a>
-                </div>
-
-                <button type="submit" class="btn-signin">Sign In</button>
+                <?php if ($step === 'email'): ?>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required autofocus>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Reset Code</button>
+                <?php elseif ($step === 'otp'): ?>
+                    <div class="form-group">
+                        <label for="otp">Verification Code</label>
+                        <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required autofocus maxlength="6">
+                    </div>
+                    <button type="submit" name="verify_otp" class="btn-submit">Verify Code</button>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="?retry=1" style="color: var(--accent-color); text-decoration: none; font-size: 0.875rem;">Didn't receive code? Try again</a>
+                    </div>
+                <?php else: ?>
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Min. 6 characters" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Reset Password</button>
+                <?php endif; ?>
             </form>
 
-            <?php if ($error && isset($_SESSION['pending_verify_email']) && $_SESSION['pending_verify_email']): ?>
-                <div class="alert alert-info" style="background-color: rgba(59,130,246,0.1); border-left: 4px solid #3b82f6; color: #1d4ed8; margin-top:12px;">
-                    <p class="font-medium">Your email is not verified yet.</p>
-                    <div style="margin-top:8px; display:flex; gap:12px; align-items:center; flex-wrap: wrap;">
-                        <input type="hidden" id="pending-email" value="<?php echo htmlspecialchars($_SESSION['pending_verify_email']); ?>" />
-                        <a href="verify-otp.php" style="color:#1d4ed8; text-decoration:underline;">Verify now</a>
-                        <a href="#" onclick="resendFromLogin(event)" style="color:#1d4ed8; text-decoration:underline;">Resend code</a>
-                    </div>
-                    <span id="resend-note" style="font-size:12px; color:#047857; font-weight: 600; display: none; margin-top: 8px;"></span>
-                </div>
-            <?php endif; ?>
-
-            <div class="divider">
-                <div class="divider-line"></div>
-                <span>or continue with</span>
-                <div class="divider-line"></div>
-            </div>
-
-            <div class="social-login">
-                <button class="social-btn" type="button" title="Sign in with Google">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 7v10M7 12h10"></path>
-                    </svg>
-                </button>
-                <button class="social-btn" type="button" title="Sign in with GitHub">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M8 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
-                        <path d="M8 8h8M8 14h8"></path>
-                    </svg>
-                </button>
-                <button class="social-btn" type="button" title="Sign in with Microsoft">
-                    <svg viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="14" width="7" height="7"></rect>
-                        <rect x="3" y="14" width="7" height="7"></rect>
-                    </svg>
-                </button>
-            </div>
-
             <div class="form-footer">
-                Don't have an account? <a href="register.php">Register for free</a>
+                <a href="login.php">← Back to Login</a>
             </div>
         </div>
 
         <!-- Right Side -->
-        <div class="login-image-section">
+        <div class="forgot-image-section">
             <img src="assets/images/StudentsBSU.png" alt="Students">
             <div class="badge">
                 <div class="badge-icon">
@@ -670,57 +594,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </svg>
                 </div>
                 <div class="badge-content">
-                    <h3>250k</h3>
-                    <p>Assisted Students</p>
+                    <h3>Secure Reset</h3>
+                    <p>Password recovery with email verification</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        async function resendFromLogin(e){
-            e.preventDefault();
-            const emailEl = document.getElementById('pending-email');
-            if(!emailEl){ return; }
-            const email = emailEl.value;
-            const note = document.getElementById('resend-note');
-            note.style.display = 'block';
-            note.style.color = '#3b82f6';
-            note.textContent = 'Sending...';
-            try{
-                const resp = await fetch('verify-otp.php?resend=1', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'email='+encodeURIComponent(email)});
-                const msg = await resp.text();
-                if (resp.status === 204) {
-                    note.style.color = '#047857';
-                    note.textContent = '✓ A new code has been sent to your email!';
-                } else if (resp.status === 429) {
-                    note.style.color = '#b91c1c';
-                    note.textContent = msg || 'Please wait before requesting another code.';
-                } else {
-                    note.style.color = '#b91c1c';
-                    note.textContent = msg || 'Failed to send. Please try again.';
-                }
-            }catch(err){ 
-                note.style.color = '#b91c1c';
-                note.textContent = 'Network error. Please try again.';
-            }
-        }
-
-        // Password toggle functionality
-        document.getElementById('password-toggle').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                this.title = 'Hide password';
-                eyeIcon.innerHTML = '<path d="M2.99902 3L21 21M9.8433 9.91364C9.32066 10.4536 8.99902 11.1892 8.99902 12C8.99902 13.6569 10.3422 15 12 15C12.8215 15 13.5667 14.669 14.1086 14.133M6.49902 6.64715C4.59972 7.90034 3.15305 9.78394 2.45703 12C3.73128 16.0571 7.52159 19 12 19C13.9881 19 15.8414 18.4194 17.3988 17.4184M10.999 5.04939C11.328 5.01673 11.6617 5 11.999 5C16.4784 5 20.2686 7.94291 21.5429 12C21.2607 12.894 20.8577 13.7338 20.3522 14.5"></path>';
-            } else {
-                passwordInput.type = 'password';
-                this.title = 'Show password';
-                eyeIcon.innerHTML = '<path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"></path><circle cx="12" cy="12" r="3"></circle>';
-            }
-        });
-    </script>
 </body>
 </html>

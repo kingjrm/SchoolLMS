@@ -3867,3 +3867,5 @@ Stack trace:
 #1 C:\xampp\htdocs\School-LMS\student\announcements.php(30): Database->bind('i', 22)
 #2 {main}
   thrown in C:\xampp\htdocs\School-LMS\includes\Database.php on line 60
+[09-Jan-2026 01:41:21 UTC] Mailer error: PHPMailerException: SMTP Error: Could not connect to SMTP host. Connection failed. stream_socket_client(): SSL: An existing connection was forcibly closed by the remote host
+[09-Jan-2026 01:46:30 UTC] Mailer error: PHPMailerException: SMTP Error: Could not connect to SMTP host. Connection failed. stream_socket_client(): SSL: An existing connection was forcibly closed by the remote host

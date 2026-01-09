@@ -227,6 +227,95 @@ class Auth {
             exit;
         }
     }
+
+    /**
+     * Request password reset - send OTP to email
+     */
+    public function requestPasswordReset($email) {
+        global $pdo;
+        try {
+            // Check if email exists
+            $stmt = $pdo->prepare("SELECT id, username, first_name, last_name FROM users WHERE email = ? AND status = 'active' LIMIT 1");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user) {
+                return ['success' => false, 'message' => 'No account found with this email address'];
+            }
+
+            // Generate OTP
+            require_once __DIR__ . '/OTP.php';
+            $otpResult = otp_create($email, 'password_reset', 15); // 15 minutes expiry
+
+            // Send email
+            require_once __DIR__ . '/Mailer.php';
+            $mailer = new Mailer();
+
+            $subject = 'Password Reset - School LMS';
+            $htmlBody = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #ff6b35;'>Password Reset Request</h2>
+                <p>Hello {$user['first_name']} {$user['last_name']},</p>
+                <p>You requested a password reset for your School LMS account.</p>
+                <p>Your verification code is: <strong style='font-size: 24px; color: #ff6b35;'>{$otpResult['code']}</strong></p>
+                <p>This code will expire in 15 minutes.</p>
+                <p>If you didn't request this reset, please ignore this email.</p>
+                <br>
+                <p>Best regards,<br>School LMS Team</p>
+            </div>
+            ";
+
+            $altBody = "Hello {$user['first_name']} {$user['last_name']},\n\nYou requested a password reset for your School LMS account.\n\nYour verification code is: {$otpResult['code']}\n\nThis code will expire in 15 minutes.\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nSchool LMS Team";
+
+            $mailResult = $mailer->send($email, $user['first_name'] . ' ' . $user['last_name'], $subject, $htmlBody, $altBody);
+
+            if (!$mailResult) {
+                return ['success' => false, 'message' => 'Failed to send email: ' . $mailer->getLastError()];
+            }
+
+            return ['success' => true, 'message' => 'Password reset code sent to your email'];
+
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Reset password using OTP
+     */
+    public function resetPassword($email, $otp, $newPassword) {
+        global $pdo;
+        try {
+            // If OTP is provided, verify it first
+            if (!empty($otp)) {
+                require_once __DIR__ . '/OTP.php';
+                $otpVerify = otp_verify($email, $otp, 'password_reset');
+
+                if (!$otpVerify['success']) {
+                    return ['success' => false, 'message' => $otpVerify['message'] ?? 'Invalid or expired code'];
+                }
+            }
+
+            // Validate new password
+            if (strlen($newPassword) < 6) {
+                return ['success' => false, 'message' => 'Password must be at least 6 characters'];
+            }
+
+            // Update password
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("UPDATE users SET password = ?, updated_at = NOW() WHERE email = ?");
+            $stmt->execute([$hashedPassword, $email]);
+
+            if ($stmt->rowCount() === 0) {
+                return ['success' => false, 'message' => 'Failed to update password'];
+            }
+
+            return ['success' => true, 'message' => 'Password reset successfully'];
+
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
 }
 
 Auth::startSession();
